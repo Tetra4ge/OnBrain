@@ -27,8 +27,11 @@ Our solution brings together modern NLP, Knowledge Graphs, and Agentic AI into a
 4. **Maintenance Intelligence:** 
    By connecting the dots between failure records and operating conditions, the system supports Root Cause Analysis (RCA) and predictive maintenance recommendations.
 
-## 🛠️ Tech Stack
-- **Frontend:** React (Desktop + Mobile friendly)
-- **Backend:** FastAPI, Python
-- **Database / Storage:** PostgreSQL, Neo4j (Knowledge Graph), ChromaDB/Pinecone (Vector DB)
-- **AI / ML:** LangChain/LangGraph, Gemini/Mistral, PyMuPDF + Tesseract for OCR
+## Tech Stack
+- **Frontend:** React
+- **Backend:** FastAPI
+- **Database:** PostgreSQL (via Supabase)
+- **Auth:** Supabase Auth
+- **VectorDB:** Pinecone
+- **GraphRAG:** Neo4j
+- **AI / Embeddings:** Gemini (Embedding Model), OpenRouter (LLM APIs)
