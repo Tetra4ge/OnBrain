@@ -14,15 +14,16 @@ def detect_format(filename: str, file_bytes: bytes = None) -> Dict[str, Any]:
     ext = os.path.splitext(filename)[1].lower()
     fname_lower = filename.lower()
     
-    # Check for P&ID pattern in filename using word boundary matching
-    is_pid = bool(re.search(r'\b(pid|drawing|dwg)\b', fname_lower))
+    # Check for P&ID pattern in filename (e.g., pid, p&id, p-id, p_id, drawing, dwg)
+    is_pid = bool(re.search(r'(\b(pid|drawing|dwg)\b|p[&-_.]?id)', fname_lower))
     
     mime_map = {
         ".json": "application/json",
         ".png": "image/png",
         ".jpg": "image/jpeg",
         ".jpeg": "image/jpeg",
-        ".svg": "image/svg+xml"
+        ".svg": "image/svg+xml",
+        ".pdf": "application/pdf"
     }
     
     if is_pid and ext in mime_map:
