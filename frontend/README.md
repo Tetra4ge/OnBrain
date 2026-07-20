@@ -1,16 +1,38 @@
-# React + Vite
+# OnBrain Dashboard Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+The web dashboard interface for **OnBrain**, an industrial knowledge intelligence platform built with React 19, Vite, and Tailwind CSS.
 
-Currently, two official plugins are available:
+## Getting Started
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### Local Development
 
-## React Compiler
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+2. Start development server:
+   ```bash
+   npm run dev
+   ```
+   The dashboard will run at `http://localhost:5173`.
 
-## Expanding the Oxlint configuration
+### Environment Variables
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Configure backend API target in `.env`:
+```env
+VITE_API_URL=http://localhost:8000
+```
+
+### Containerized Deployment
+
+Run via Docker Compose from the root workspace directory:
+```bash
+docker-compose up frontend
+```
+
+## Features & Workflows
+
+- **Health Status Monitor:** Real-time connectivity check with the FastAPI backend endpoint.
+- **Document Ingestion Workflow:** UI interface for uploading industrial documents and executing multi-format ingestion pipelines.
+- **Knowledge Explorer:** Dashboard view connecting document metadata, vector embeddings, and Neo4j graph relationships.

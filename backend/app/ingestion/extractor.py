@@ -177,7 +177,7 @@ def _extract_deterministic(text: str, doc_type: DocType, filename: str) -> Dict[
 
 
 def _extract_with_groq(text: str, doc_type: DocType, api_key: str) -> Dict[str, Any]:
-    """Uses Groq Llama 3 API for structured entity extraction."""
+    """Uses Groq Llama 3.3 70B API for structured entity extraction."""
     from groq import Groq
     client = Groq(api_key=api_key)
     
@@ -207,11 +207,18 @@ def _extract_with_gemini(text: str, doc_type: DocType, api_key: str) -> Dict[str
     """Uses Google Gemini API for structured entity extraction."""
     import google.generativeai as genai
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel("gemini-1.5-flash-latest")
+    model = genai.GenerativeModel("gemini-1.5-flash")
     
     prompt = f"Extract industrial entities (Equipment, WorkOrders, Failures, Procedures, Regulations, Personnel) and relationships from the text.\nReturn ONLY valid JSON.\n\nDocument Text:\n{text[:4000]}"
     response = model.generate_content(prompt)
-    clean_json = response.text.strip().lstrip("```json").rstrip("```").strip()
+    raw_text = response.text.strip()
+    if raw_text.startswith("```json"):
+        raw_text = raw_text[7:]
+    elif raw_text.startswith("```"):
+        raw_text = raw_text[3:]
+    if raw_text.endswith("```"):
+        raw_text = raw_text[:-3]
+    clean_json = raw_text.strip()
     parsed = json.loads(clean_json)
     parsed["confidence"] = {"overall_avg": 0.96}
     return parsed

@@ -20,7 +20,45 @@ def extract_document_text(file_bytes: bytes, filename: str, format_info: Dict[st
     full_text = ""
 
     try:
-        if strategy == "structured_json" or extension == ".json":
+        if strategy == "ocr":
+            # Explicit OCR processing for scanned files / images / scanned PDFs
+            if extension == ".pdf" or format_info.get("format") == "pdf":
+                try:
+                    import io
+                    import pytesseract
+                    from pdf2image import convert_from_bytes
+                    images = convert_from_bytes(file_bytes)
+                    pdf_ocr_pages = []
+                    for idx, img in enumerate(images):
+                        page_text = pytesseract.image_to_string(img)
+                        pdf_ocr_pages.append({"page_number": idx + 1, "text": page_text})
+                    
+                    if pdf_ocr_pages:
+                        pages = pdf_ocr_pages
+                        full_text = "\n\n".join([p["text"] for p in pdf_ocr_pages])
+                    else:
+                        full_text = f"[Document content for {filename}]"
+                        pages.append({"page_number": 1, "text": full_text})
+                except Exception as pdf_ocr_err:
+                    logger.warning(f"PDF OCR rendering/extraction failed for {filename}: {pdf_ocr_err}")
+                    full_text = f"[Document content for {filename}]"
+                    pages.append({"page_number": 1, "text": full_text})
+            else:
+                ocr_text = ""
+                try:
+                    import io
+                    import pytesseract
+                    from PIL import Image
+                    image = Image.open(io.BytesIO(file_bytes))
+                    ocr_text = pytesseract.image_to_string(image)
+                except Exception as ocr_err:
+                    logger.warning(f"OCR processing unavailable or failed for {filename}: {ocr_err}")
+                    ocr_text = f"[Document content for {filename}]"
+                
+                full_text = ocr_text if ocr_text.strip() else f"[Document content for {filename}]"
+                pages.append({"page_number": 1, "text": full_text})
+
+        elif strategy == "structured_json" or extension == ".json":
             content_str = file_bytes.decode("utf-8", errors="ignore")
             try:
                 json_obj = json.loads(content_str)
@@ -45,7 +83,7 @@ def extract_document_text(file_bytes: bytes, filename: str, format_info: Dict[st
             pages.append({"page_number": 1, "text": full_text})
 
         elif extension == ".pdf":
-            # Attempt pypdf text extraction if installed, otherwise fallback to text decoder
+            # Attempt pypdf text extraction if installed, otherwise fallback to placeholder
             try:
                 import io
                 from pypdf import PdfReader
@@ -59,7 +97,7 @@ def extract_document_text(file_bytes: bytes, filename: str, format_info: Dict[st
                 full_text = "\n\n".join([p["text"] for p in pdf_pages])
             except Exception as e:
                 logger.warning(f"pypdf extraction failed for {filename}, using fallback: {e}")
-                full_text = file_bytes.decode("utf-8", errors="ignore")
+                full_text = f"[Document content for {filename}]"
                 pages.append({"page_number": 1, "text": full_text})
 
         else:
