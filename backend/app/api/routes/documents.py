@@ -10,6 +10,7 @@ from app.ingestion import (
     normalize_document,
     parse_pid_image
 )
+from app.knowledge.sync import sync_document
 
 router = APIRouter(prefix="/documents", tags=["Documents & Ingestion"])
 
@@ -63,10 +64,14 @@ async def upload_document(
         if pid_result:
             normalized["pid_symbols"] = pid_result
 
+        # ── Phase 4: Sync to knowledge stores ──
+        sync_result = await sync_document(normalized)
+
         return {
             "status": "success",
             "message": f"Successfully processed '{filename}'",
-            "document": normalized
+            "document": normalized,
+            "sync": sync_result,
         }
     except HTTPException:
         raise
@@ -138,10 +143,14 @@ async def process_sample_document(relative_path: str) -> Dict[str, Any]:
         if pid_result:
             normalized["pid_symbols"] = pid_result
 
+        # ── Phase 4: Sync to knowledge stores ──
+        sync_result = await sync_document(normalized)
+
         return {
             "status": "success",
             "message": f"Successfully processed sample '{relative_path}'",
-            "document": normalized
+            "document": normalized,
+            "sync": sync_result,
         }
     except HTTPException:
         raise
