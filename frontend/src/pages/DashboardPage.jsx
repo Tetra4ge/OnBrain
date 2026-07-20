@@ -1,80 +1,93 @@
-import React from 'react';
+import React, { useState } from 'react';
 import StatCard from '../components/StatCard';
 import HeatmapGrid from '../components/HeatmapGrid';
-import AlertCard from '../components/AlertCard';
-import { statSummary, heatmapMatrix, anomalies } from '../mockData';
-import { Activity, ShieldAlert, ArrowUpRight } from 'lucide-react';
+import IngestionWorkbench from '../components/IngestionWorkbench';
+import { initialStatSummary, emptyHeatmapMatrix } from '../mockData';
+import { Activity, ShieldAlert, Cpu, Layers, FileCheck } from 'lucide-react';
 
-export default function DashboardPage({ onSelectAlert, onViewAllAlerts }) {
-  // Take top 4 active alerts for dashboard view
-  const activeAlerts = anomalies.slice(0, 4);
+export default function DashboardPage({ processedDocs = [], onDocumentProcessed }) {
+  const [stats, setStats] = useState({
+    ...initialStatSummary,
+    systemsMonitored: 5,
+  });
 
   return (
     <div className="space-y-6">
-      {/* Welcome & Overview Header */}
+      {/* Welcome & System Status Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white rounded-3xl p-6 shadow-soft border border-[rgba(13,59,54,0.06)]">
         <div>
           <h2 className="text-xl font-extrabold text-[#0D3B36] tracking-tight">
             SOC Operational Dashboard
           </h2>
           <p className="text-xs text-[#6B7B76] mt-0.5 font-medium">
-            Phase 2 real-time anomaly detection & telemetry monitoring
+            Live system telemetry & document ingestion pipeline
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <div className="bg-[#1D9E75]/15 text-[#0D3B36] border border-[#1D9E75]/30 text-xs font-bold px-3.5 py-1.5 rounded-full flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-[#1D9E75] animate-pulse" />
-            <span>Telemetry Pipeline Healthy</span>
+            <span>FastAPI Ingestion Engine Ready</span>
           </div>
-
-          <button
-            onClick={onViewAllAlerts}
-            className="bg-[#0D3B36] hover:bg-[#155A52] text-white text-xs font-bold px-4 py-2.5 rounded-2xl transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
-          >
-            <span>View All {anomalies.length} Alerts</span>
-            <ArrowUpRight className="h-4 w-4" />
-          </button>
         </div>
       </div>
 
-      {/* Top Stat Row (4 Cards) */}
+      {/* Top Stat Row (4 Cards - Live State) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <StatCard type="activeAnomalies" data={statSummary} />
-        <StatCard type="riskScore" data={statSummary} />
-        <StatCard type="systemsMonitored" data={statSummary} />
-        <StatCard type="stackedStats" data={statSummary} />
+        <StatCard type="activeAnomalies" data={stats} />
+        <StatCard type="riskScore" data={stats} />
+        <StatCard type="systemsMonitored" data={stats} />
+        <StatCard type="stackedStats" data={stats} />
       </div>
+
+      {/* Live Ingestion Pipeline Workbench */}
+      <IngestionWorkbench onDocumentProcessed={onDocumentProcessed} />
 
       {/* Network Health Snapshot (Heatmap Tile) */}
-      <HeatmapGrid matrixData={heatmapMatrix} />
+      <HeatmapGrid matrixData={emptyHeatmapMatrix} />
 
-      {/* Active Alerts Section */}
-      <div>
-        <div className="flex items-center justify-between mb-4">
+      {/* Ingested Documents & Active Telemetry Feed */}
+      <div className="bg-white rounded-3xl p-6 shadow-soft border border-[rgba(13,59,54,0.06)] space-y-4">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h3 className="text-lg font-extrabold text-[#0D3B36] tracking-tight">
-              Active Security Alerts
+            <FileCheck className="h-5 w-5 text-[#1D9E75]" />
+            <h3 className="text-base font-extrabold text-[#0D3B36]">
+              Processed Telemetry & Ingested Documents
             </h3>
-            <span className="bg-[#F0785A]/15 text-[#8C2911] border border-[#F0785A]/30 text-xs font-bold px-2.5 py-0.5 rounded-full">
-              {activeAlerts.length} Critical/High
-            </span>
           </div>
-
-          <button
-            onClick={onViewAllAlerts}
-            className="text-xs font-bold text-[#1D9E75] hover:underline cursor-pointer"
-          >
-            See full feed →
-          </button>
+          <span className="text-xs font-bold bg-[#DCEEE7] text-[#0D3B36] px-3 py-1 rounded-full">
+            {processedDocs.length} Documents Ingested
+          </span>
         </div>
 
-        {/* Alerts Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {activeAlerts.map((alert) => (
-            <AlertCard key={alert.id} alert={alert} onSelectAlert={onSelectAlert} />
-          ))}
-        </div>
+        {processedDocs.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {processedDocs.map((doc, idx) => (
+              <div key={idx} className="p-4 rounded-2xl bg-[#DCEEE7]/30 border border-[rgba(13,59,54,0.06)] space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-extrabold text-xs text-[#0D3B36]">{doc.filename}</span>
+                  <span className="text-[10px] font-mono font-bold bg-[#0D3B36] text-white px-2 py-0.5 rounded-md">
+                    {doc.doc_type}
+                  </span>
+                </div>
+                <div className="text-xs text-[#6B7B76]">
+                  Entities extracted: <span className="font-bold text-[#0D3B36]">{Object.keys(doc.entities || {}).reduce((acc, k) => acc + (doc.entities[k]?.length || 0), 0)}</span>
+                </div>
+                <div className="text-[11px] text-[#6B7B76] truncate font-mono">
+                  Path: {doc.source_path || doc.filename}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="p-8 text-center rounded-2xl bg-[#DCEEE7]/20 border border-dashed border-[rgba(13,59,54,0.12)]">
+            <Cpu className="h-8 w-8 text-[#6B7B76] mx-auto mb-2 opacity-60" />
+            <p className="text-xs font-bold text-[#0D3B36]">No documents ingested in current session</p>
+            <p className="text-xs text-[#6B7B76] mt-1 max-w-md mx-auto">
+              Use the Document Ingestion Workbench above to process sample work orders, inspection reports, or custom files through the live backend pipeline.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
