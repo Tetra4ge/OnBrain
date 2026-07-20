@@ -1,7 +1,8 @@
 import os
-import glob
+from pathlib import Path
 from typing import List, Dict, Any
 from fastapi import APIRouter, UploadFile, File, HTTPException, Form
+from fastapi.concurrency import run_in_threadpool
 from app.ingestion import (
     detect_format,
     extract_document_text,
@@ -12,6 +13,9 @@ from app.ingestion import (
 router = APIRouter(prefix="/documents", tags=["Documents & Ingestion"])
 
 SAMPLES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../..", "data", "samples"))
+SAMPLES_DIR_PATH = Path(SAMPLES_DIR).resolve()
+
+MAX_UPLOAD_SIZE = 10 * 1024 * 1024  # 10MB
 
 @router.post("/upload")
 async def upload_document(
@@ -21,27 +25,38 @@ async def upload_document(
     """
     Accepts an uploaded document file, runs the format detector, text extractor/OCR,
     entity/relationship extractor, and document normalizer.
-    Returns normalized document payload ready for storage.
+    Enforces maximum upload size and offloads sync pipeline functions to thread pool.
     """
     try:
-        content = await file.read()
+        content = await file.read(MAX_UPLOAD_SIZE + 1)
+        if len(content) > MAX_UPLOAD_SIZE:
+            raise HTTPException(
+                status_code=413,
+                detail=f"File size exceeds maximum allowed limit of {MAX_UPLOAD_SIZE // (1024 * 1024)}MB"
+            )
         filename = file.filename
         
-        format_info = detect_format(filename, content)
+        format_info = await run_in_threadpool(detect_format, filename, content)
         if doc_type_override:
             format_info["doc_type"] = doc_type_override
 
-        text_result = extract_document_text(content, filename, format_info)
+        text_result = await run_in_threadpool(extract_document_text, content, filename, format_info)
         raw_text = text_result["raw_text"]
 
-        extracted = extract_entities_and_relationships(raw_text, format_info["doc_type"], filename)
-        normalized = normalize_document(filename, raw_text, extracted, format_info)
+        extracted = await run_in_threadpool(
+            extract_entities_and_relationships, raw_text, format_info["doc_type"], filename
+        )
+        normalized = await run_in_threadpool(
+            normalize_document, filename, raw_text, extracted, format_info
+        )
 
         return {
             "status": "success",
             "message": f"Successfully processed '{filename}'",
             "document": normalized
         }
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Document processing failed: {str(e)}")
 
@@ -74,30 +89,40 @@ def list_sample_documents() -> Dict[str, Any]:
 
 
 @router.post("/process-sample")
-def process_sample_document(relative_path: str) -> Dict[str, Any]:
+async def process_sample_document(relative_path: str) -> Dict[str, Any]:
     """
     Runs the full ingestion pipeline on a sample document located in data/samples/.
+    Validates candidate path using Path.relative_to() to prevent traversal attacks.
     """
-    target_path = os.path.normpath(os.path.join(SAMPLES_DIR, relative_path))
-    if not target_path.startswith(SAMPLES_DIR) or not os.path.exists(target_path):
+    try:
+        candidate_path = (SAMPLES_DIR_PATH / relative_path).resolve()
+        candidate_path.relative_to(SAMPLES_DIR_PATH)
+    except Exception:
+        raise HTTPException(status_code=404, detail=f"Sample file '{relative_path}' not found.")
+
+    if not candidate_path.is_file():
         raise HTTPException(status_code=404, detail=f"Sample file '{relative_path}' not found.")
 
     try:
-        with open(target_path, "rb") as f:
-            content = f.read()
-
-        filename = os.path.basename(target_path)
-        format_info = detect_format(filename, content)
-        text_result = extract_document_text(content, filename, format_info)
+        content = candidate_path.read_bytes()
+        filename = candidate_path.name
+        format_info = await run_in_threadpool(detect_format, filename, content)
+        text_result = await run_in_threadpool(extract_document_text, content, filename, format_info)
         raw_text = text_result["raw_text"]
 
-        extracted = extract_entities_and_relationships(raw_text, format_info["doc_type"], filename)
-        normalized = normalize_document(filename, raw_text, extracted, format_info)
+        extracted = await run_in_threadpool(
+            extract_entities_and_relationships, raw_text, format_info["doc_type"], filename
+        )
+        normalized = await run_in_threadpool(
+            normalize_document, filename, raw_text, extracted, format_info
+        )
 
         return {
             "status": "success",
             "message": f"Successfully processed sample '{relative_path}'",
             "document": normalized
         }
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Sample processing failed: {str(e)}")
