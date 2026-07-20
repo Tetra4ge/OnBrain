@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core import auth
+from app.api.routes import documents_router
 
 app = FastAPI(
     title="OnBrain API",
@@ -18,7 +19,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Include API routes
+app.include_router(documents_router, prefix="/api")
+
 @app.get("/health")
 def health_check():
     """Simple healthcheck endpoint to verify backend service status."""
     return {"status": "ok"}
+
