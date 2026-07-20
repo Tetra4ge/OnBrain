@@ -21,6 +21,9 @@ class Settings(BaseSettings):
 
     CHROMA_HOST: str = "chroma"
     CHROMA_PORT: int = 8000
+    CHROMA_API_KEY: Optional[str] = None
+    CHROMA_TENANT: Optional[str] = None
+    CHROMA_DATABASE: str = "Onbrain"
 
     GROQ_API_KEY: Optional[str] = None
     GEMINI_API_KEY: Optional[str] = None
