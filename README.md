@@ -1,7 +1,7 @@
 # OnBrain
 **An always-on Industrial AI Brain fusing P&IDs and maintenance logs into a unified, predictive knowledge graph to drive zero downtime.**
 
-> 📚 **[Full Documentation](./docs/README.md)** · 📐 **[Architecture](./architecture.md)** · 📅 **[Build Phases](./phases/README.md)**
+> 📐 **[Architecture](./architecture.md)** · 📅 **[Build Phases](./phases/README.md)** · 🧪 **[Testing Guide](./phases/testing.md)**
 
 ---
 
@@ -83,18 +83,21 @@ Sources → Ingestion Layer → Knowledge Layer → Agent Layer → Application 
 
 ---
 
-## Build Phases (Two-Week Plan)
+## Build Phases
 
-| Phase | Days | Focus | Details |
-|-------|------|-------|---------|
-| [Phase 1 — Foundation](./phases/phase-1-foundation.md) | 1–2 | Repo setup, data collection, schema design | Docker, schemas, sample data |
-| [Phase 2 — Ingestion](./phases/phase-2-ingestion.md) | 3–5 | OCR, entity extraction, P&ID parsing | Full ingestion pipeline |
-| [Phase 3 — Knowledge](./phases/phase-3-knowledge.md) | 6–8 | Graph population, embedding pipeline, sync | All three stores populated |
-| [Phase 4 — Agents](./phases/phase-4-agents.md) | 9–11 | Copilot RAG, RCA agent, tool-calling | Reasoning layer complete |
-| [Phase 5 — Application](./phases/phase-5-application.md) | 12–13 | Dashboard, mobile chat, Firebase Auth | Full UI wired up |
-| [Phase 6 — Polish](./phases/phase-6-polish.md) | 14 | Polish, deck, demo video, benchmarks | Deliverables ready |
+| Phase | Focus | Details | Link |
+|-------|-------|---------|------|
+| **Phase 1 — Foundation** | Repo setup, Docker, services health | Environment & backend scaffolding | [phase-1-foundation.md](./phases/phase-1-foundation.md) |
+| **Phase 2 — Data & Schema** | Demo documents & schema lock | MongoDB, Neo4j, ChromaDB schemas | [phase-2-data-schema.md](./phases/phase-2-data-schema.md) |
+| **Phase 3 — Ingestion** | OCR, extraction, normalizer | Full ingestion pipeline | [phase-3-ingestion.md](./phases/phase-3-ingestion.md) |
+| **Phase 4 — Knowledge Layer** | Graph & vector store population | Neo4j + ChromaDB + MongoDB sync | [phase-4-knowledge.md](./phases/phase-4-knowledge.md) |
+| **Phase 5 — Copilot Agent** | RAG Q&A, citations, confidence | Reasoning agent layer | [phase-5-copilot-agent.md](./phases/phase-5-copilot-agent.md) |
+| **Phase 6 — RCA Agent** | Failure cause analysis | Root-cause workbench | [phase-6-rca-agent.md](./phases/phase-6-rca-agent.md) |
+| **Phase 7 — Frontend Core** | Auth, document upload, chat UI | Web dashboard & mobile | [phase-7-frontend-core.md](./phases/phase-7-frontend-core.md) |
+| **Phase 8 — Frontend Advanced** | Graph explorer, RCA UI | Advanced visualization | [phase-8-frontend-advanced.md](./phases/phase-8-frontend-advanced.md) |
+| **Testing** | E2E integration & verification | Checklist & triage protocol | [testing.md](./phases/testing.md) |
 
-> **Full phase details with dependencies:** [phases/README.md →](./phases/README.md)
+> **Full phase details:** [phases/README.md →](./phases/README.md)
 
 ---
 
@@ -103,23 +106,17 @@ Sources → Ingestion Layer → Knowledge Layer → Agent Layer → Application 
 ```
 README.md (you are here)
 ├── architecture.md ──────── High-level system blueprint
-├── docs/
-│   ├── README.md ────────── Documentation index
-│   ├── ingestion.md ─────── Layer 1: OCR, P&ID, extraction
-│   ├── knowledge-layer.md ─ Layer 2: ChromaDB, Neo4j, MongoDB
-│   ├── agents.md ────────── Layer 3: Copilot, RCA agents
-│   ├── application.md ───── Layer 4: Dashboard, chat, auth
-│   ├── tech-stack.md ────── Full technology inventory
-│   ├── data-flow.md ─────── End-to-end data pipeline
-│   └── api-reference.md ─── FastAPI endpoint catalog
 └── phases/
     ├── README.md ────────── Build timeline index
     ├── phase-1-foundation.md
-    ├── phase-2-ingestion.md
-    ├── phase-3-knowledge.md
-    ├── phase-4-agents.md
-    ├── phase-5-application.md
-    └── phase-6-polish.md
+    ├── phase-2-data-schema.md
+    ├── phase-3-ingestion.md
+    ├── phase-4-knowledge.md
+    ├── phase-5-copilot-agent.md
+    ├── phase-6-rca-agent.md
+    ├── phase-7-frontend-core.md
+    ├── phase-8-frontend-advanced.md
+    └── testing.md
 ```
 
 ---
