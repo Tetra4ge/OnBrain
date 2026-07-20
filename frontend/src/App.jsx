@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+
 function App() {
   const [healthStatus, setHealthStatus] = useState('checking')
   const [testCount, setTestCount] = useState(0)
 
   useEffect(() => {
-    fetch('http://localhost:8000/health')
+    fetch(`${API_URL}/health`)
       .then((res) => res.json())
       .then((data) => {
         if (data.status === 'ok') {
@@ -117,7 +119,7 @@ function App() {
         {/* Action Button */}
         <div className="flex flex-col sm:flex-row gap-4 items-center">
           <a
-            href="http://localhost:8000/health"
+            href={`${API_URL}/health`}
             target="_blank"
             rel="noreferrer"
             className="px-6 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 font-semibold text-white transition-all shadow-lg hover:shadow-violet-600/20 text-center w-full sm:w-auto"
