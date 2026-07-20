@@ -1,4 +1,6 @@
 import os
+import re
+import io
 import mimetypes
 from typing import Dict, Any
 from app.models.schemas import DocType
@@ -12,26 +14,35 @@ def detect_format(filename: str, file_bytes: bytes = None) -> Dict[str, Any]:
     ext = os.path.splitext(filename)[1].lower()
     fname_lower = filename.lower()
     
-    # Check for P&ID pattern in filename
-    is_pid = "pid" in fname_lower or "drawing" in fname_lower or "dwg" in fname_lower
+    # Check for P&ID pattern in filename using word boundary matching
+    is_pid = bool(re.search(r'\b(pid|drawing|dwg)\b', fname_lower))
     
-    if is_pid and ext in [".json", ".png", ".jpg", ".jpeg", ".svg"]:
+    mime_map = {
+        ".json": "application/json",
+        ".png": "image/png",
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
+        ".svg": "image/svg+xml"
+    }
+    
+    if is_pid and ext in mime_map:
         return {
             "format": "pid",
             "strategy": "pid_parser",
             "extension": ext,
             "doc_type": DocType.PID,
-            "mime_type": "application/json" if ext == ".json" else "image/png"
+            "mime_type": mime_map[ext]
         }
         
     if ext == ".pdf":
-        # Check if PDF has extractable text or requires OCR
+        # Check if PDF has extractable text using pypdf
         has_text_layer = False
         if file_bytes:
             try:
-                # Basic check for PDF text stream keywords
-                text_sample = file_bytes[:4096].decode('utf-8', errors='ignore')
-                if "/Text" in text_sample or "/Font" in text_sample or "stream" in text_sample:
+                from pypdf import PdfReader
+                reader = PdfReader(io.BytesIO(file_bytes))
+                extracted_text = "".join([page.extract_text() or "" for page in reader.pages]).strip()
+                if extracted_text:
                     has_text_layer = True
             except Exception:
                 has_text_layer = False

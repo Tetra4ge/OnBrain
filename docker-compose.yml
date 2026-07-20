@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: onbrain-api
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     volumes:
       - ./backend:/app
       - /app/app/__pycache__
@@ -22,7 +22,7 @@ services:
       dockerfile: Dockerfile
     container_name: onbrain-frontend
     ports:
-      - "5173:5173"
+      - "127.0.0.1:5173:5173"
     volumes:
       - ./frontend:/app
       - /app/node_modules
@@ -35,7 +35,10 @@ services:
     image: mongo:6.0
     container_name: onbrain-mongo
     ports:
-      - "27017:27017"
+      - "127.0.0.1:27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER:-root}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD:-rootpassword}
     volumes:
       - mongo-data:/data/db
 
@@ -43,10 +46,10 @@ services:
     image: neo4j:5-community
     container_name: onbrain-neo4j
     ports:
-      - "7474:7474"
-      - "7687:7687"
+      - "127.0.0.1:7474:7474"
+      - "127.0.0.1:7687:7687"
     environment:
-      - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD:-password123}
+      - NEO4J_AUTH=${NEO4J_AUTH:-neo4j/strongpassword}
     volumes:
       - neo4j-data:/data
 
@@ -54,7 +57,7 @@ services:
     image: chromadb/chroma:latest
     container_name: onbrain-chroma
     ports:
-      - "8001:8000"
+      - "127.0.0.1:8001:8000"
     volumes:
       - chroma-data:/chroma/chroma
 

@@ -194,7 +194,7 @@ def _extract_with_groq(text: str, doc_type: DocType, api_key: str) -> Dict[str, 
 
     chat_completion = client.chat.completions.create(
         messages=[{"role": "user", "content": prompt}],
-        model="llama-3.3-70b-versatile",
+        model="qwen/qwen3.6-27b",
         response_format={"type": "json_object"}
     )
     result_str = chat_completion.choices[0].message.content
@@ -207,7 +207,7 @@ def _extract_with_gemini(text: str, doc_type: DocType, api_key: str) -> Dict[str
     """Uses Google Gemini API for structured entity extraction."""
     import google.generativeai as genai
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel("gemini-1.5-flash-latest")
+    model = genai.GenerativeModel("gemini-1.5-flash")
     
     prompt = f"Extract industrial entities (Equipment, WorkOrders, Failures, Procedures, Regulations, Personnel) and relationships from the text.\nReturn ONLY valid JSON.\n\nDocument Text:\n{text[:4000]}"
     response = model.generate_content(prompt)
