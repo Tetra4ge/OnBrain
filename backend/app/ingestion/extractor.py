@@ -181,10 +181,7 @@ def _extract_with_groq(text: str, doc_type: DocType, api_key: str) -> Dict[str, 
     from groq import Groq
     client = Groq(api_key=api_key)
     
-    prompt = f"""
-Extract industrial entities (Equipment, WorkOrders, Failures, Procedures, Regulations, Personnel) and relationships from the text.
-Output JSON only matching this schema:
-{{
+    json_schema_template = """{
   "equipment": [{"tag": "", "name": "", "type": "", "location": ""}],
   "work_orders": [{"id": "", "date": "", "description": "", "status": ""}],
   "failures": [{"id": "", "date": "", "description": "", "severity": ""}],
@@ -192,11 +189,9 @@ Output JSON only matching this schema:
   "regulations": [{"code": "", "title": "", "authority": ""}],
   "personnel": [{"name": "", "role": ""}],
   "relationships": [{"source_id": "", "source_label": "", "relation": "", "target_id": "", "target_label": ""}]
-}}
+}"""
+    prompt = f"Extract industrial entities (Equipment, WorkOrders, Failures, Procedures, Regulations, Personnel) and relationships from the text.\nOutput JSON only matching this schema:\n{json_schema_template}\n\nDocument Text:\n{text[:4000]}"
 
-Document Text:
-{text[:4000]}
-"""
     chat_completion = client.chat.completions.create(
         messages=[{"role": "user", "content": prompt}],
         model="llama-3.3-70b-versatile",
@@ -212,17 +207,12 @@ def _extract_with_gemini(text: str, doc_type: DocType, api_key: str) -> Dict[str
     """Uses Google Gemini API for structured entity extraction."""
     import google.generativeai as genai
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.GenerativeModel("gemini-1.5-flash-latest")
     
-    prompt = f"""
-Extract industrial entities (Equipment, WorkOrders, Failures, Procedures, Regulations, Personnel) and relationships from the text.
-Return ONLY valid JSON.
-
-Document Text:
-{text[:4000]}
-"""
+    prompt = f"Extract industrial entities (Equipment, WorkOrders, Failures, Procedures, Regulations, Personnel) and relationships from the text.\nReturn ONLY valid JSON.\n\nDocument Text:\n{text[:4000]}"
     response = model.generate_content(prompt)
     clean_json = response.text.strip().lstrip("```json").rstrip("```").strip()
     parsed = json.loads(clean_json)
     parsed["confidence"] = {"overall_avg": 0.96}
     return parsed
+
