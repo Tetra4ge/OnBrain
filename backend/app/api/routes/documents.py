@@ -7,7 +7,8 @@ from app.ingestion import (
     detect_format,
     extract_document_text,
     extract_entities_and_relationships,
-    normalize_document
+    normalize_document,
+    parse_pid_image
 )
 
 router = APIRouter(prefix="/documents", tags=["Documents & Ingestion"])
@@ -24,8 +25,7 @@ async def upload_document(
 ) -> Dict[str, Any]:
     """
     Accepts an uploaded document file, runs the format detector, text extractor/OCR,
-    entity/relationship extractor, and document normalizer.
-    Enforces maximum upload size and offloads sync pipeline functions to thread pool.
+    entity/relationship extractor, P&ID symbol parser (if applicable), and document normalizer.
     """
     try:
         content = await file.read(MAX_UPLOAD_SIZE + 1)
@@ -46,9 +46,17 @@ async def upload_document(
         extracted = await run_in_threadpool(
             extract_entities_and_relationships, raw_text, format_info["doc_type"], filename
         )
+        
+        # P&ID Symbol detection run
+        pid_result = None
+        if format_info.get("format") == "pid" or format_info.get("strategy") == "pid_parser":
+            pid_result = await run_in_threadpool(parse_pid_image, content, filename)
+
         normalized = await run_in_threadpool(
             normalize_document, filename, raw_text, extracted, format_info
         )
+        if pid_result:
+            normalized["pid_symbols"] = pid_result
 
         return {
             "status": "success",
@@ -113,9 +121,17 @@ async def process_sample_document(relative_path: str) -> Dict[str, Any]:
         extracted = await run_in_threadpool(
             extract_entities_and_relationships, raw_text, format_info["doc_type"], filename
         )
+
+        # P&ID Symbol detection run
+        pid_result = None
+        if format_info.get("format") == "pid" or format_info.get("strategy") == "pid_parser":
+            pid_result = await run_in_threadpool(parse_pid_image, content, filename)
+
         normalized = await run_in_threadpool(
             normalize_document, filename, raw_text, extracted, format_info
         )
+        if pid_result:
+            normalized["pid_symbols"] = pid_result
 
         return {
             "status": "success",
