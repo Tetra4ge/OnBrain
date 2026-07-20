@@ -1,13 +1,33 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { X, ShieldAlert, Terminal, Activity, CheckCircle, Lock, User, Clock } from 'lucide-react';
 import SeverityBadge from './SeverityBadge';
 
 export default function DetailDrawer({ alert, isOpen, onClose }) {
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && onClose) {
+        onClose();
+      }
+    };
+    if (isOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen || !alert) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden bg-[#0D3B36]/30 backdrop-blur-xs flex justify-end transition-opacity duration-300">
-      <div className="w-full max-w-xl bg-white h-full shadow-2xl flex flex-col justify-between border-l border-[rgba(13,59,54,0.1)] p-6 overflow-y-auto animate-in slide-in-from-right duration-300">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-50 overflow-hidden bg-[#0D3B36]/30 backdrop-blur-xs flex justify-end transition-opacity duration-300"
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-xl bg-white h-full shadow-2xl flex flex-col justify-between border-l border-[rgba(13,59,54,0.1)] p-6 overflow-y-auto animate-in slide-in-from-right duration-300"
+      >
         <div>
           {/* Header */}
           <div className="flex items-center justify-between pb-4 border-b border-[rgba(13,59,54,0.08)]">

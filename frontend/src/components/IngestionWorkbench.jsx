@@ -13,11 +13,17 @@ export default function IngestionWorkbench({ onDocumentProcessed }) {
   useEffect(() => {
     let isMounted = true;
     const fetchSamples = async () => {
-      const docs = await getSampleDocuments();
-      if (isMounted) {
-        setSamples(docs);
-        if (docs.length > 0) {
-          setSelectedSample(docs[0].relative_path);
+      try {
+        const docs = await getSampleDocuments();
+        if (isMounted) {
+          setSamples(docs);
+          if (docs.length > 0) {
+            setSelectedSample(docs[0].relative_path);
+          }
+        }
+      } catch (err) {
+        if (isMounted) {
+          setError(err.message || 'Failed to retrieve sample document list.');
         }
       }
     };

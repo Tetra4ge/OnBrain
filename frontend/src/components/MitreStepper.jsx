@@ -1,6 +1,9 @@
 import React from 'react';
 
-export default function MitreStepper({ stages }) {
+export default function MitreStepper({ stages = [] }) {
+  const activeCount = stages.filter((s) => s.active).length;
+  const totalCount = stages.length;
+
   return (
     <div className="bg-white rounded-3xl p-6 shadow-soft border border-[rgba(13,59,54,0.06)] shadow-card-hover mb-6">
       <div className="flex items-center justify-between mb-4">
@@ -11,7 +14,7 @@ export default function MitreStepper({ stages }) {
           <p className="text-xs text-[#6B7B76]">Progression map of correlated anomalies across tactics</p>
         </div>
         <span className="text-xs font-bold text-[#1D9E75] bg-[#1D9E75]/15 px-3 py-1 rounded-full border border-[#1D9E75]/30">
-          6 of 8 Tactics Active
+          {activeCount} of {totalCount} Tactics Active
         </span>
       </div>
 

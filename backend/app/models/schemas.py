@@ -109,3 +109,12 @@ class VectorChunkMetadata(BaseModel):
     page_number: Optional[int] = Field(1, description="Page number source")
     source_filename: str = Field(..., description="Filename of source document")
     equipment_tags: List[str] = Field(default_factory=list, description="Associated equipment tags in chunk")
+
+# Model aliases for module compatibility
+Equipment = EquipmentEntity
+WorkOrder = WorkOrderEntity
+Failure = FailureEntity
+Procedure = ProcedureEntity
+Regulation = RegulationEntity
+Personnel = PersonnelEntity
+Document = NormalizedDocument
