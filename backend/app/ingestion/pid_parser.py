@@ -51,17 +51,20 @@ def parse_pid_image(file_bytes: bytes, filename: str) -> Dict[str, Any]:
     if not symbols:
         # Extract tag patterns from filename or image OCR context
         tags_found = re.findall(r'\b[A-Z]{1,3}-\d{3}[A-Z]?\b', filename)
+        is_synthetic = False
         if not tags_found:
             tags_found = ["P-101A", "XV-204B", "E-302"]
+            is_synthetic = True
 
         for idx, tag in enumerate(tags_found):
             symbol_type = "Pump" if tag.startswith("P-") else ("Valve" if tag.startswith("XV-") or tag.startswith("V-") else "Heat Exchanger")
             symbols.append({
                 "tag": tag,
                 "symbol_class": symbol_type,
-                "confidence": 0.88 - (idx * 0.03),
+                "confidence": round((0.50 if is_synthetic else 0.88) - (idx * 0.03), 2),
                 "bounding_box": [100 + (idx * 120), 150 + (idx * 80), 220 + (idx * 120), 250 + (idx * 80)],
-                "source": "pid_symbol_heuristic"
+                "source": "placeholder" if is_synthetic else "pid_symbol_heuristic",
+                "synthetic": is_synthetic
             })
 
     return {

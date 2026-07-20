@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
 from enum import Enum
-from datetime import datetime
+from datetime import datetime, timezone
 
 # --- Enums ---
 
@@ -14,7 +14,7 @@ class DocType(str, Enum):
 
 class SyncStatus(str, Enum):
     PENDING = "pending"
-    PARTIAL = "partial"
+    PROCESSING = "processing"
     COMPLETE = "complete"
     FAILED = "failed"
 
@@ -27,56 +27,51 @@ class RelationshipType(str, Enum):
     MENTIONS = "MENTIONS"
     CONTAINS = "CONTAINS"
 
-# --- Core Entity Schemas ---
+# --- Domain Entity Schemas ---
 
-class Equipment(BaseModel):
-    tag: str = Field(..., description="Unique equipment identification tag, e.g., P-101A")
-    name: str = Field(..., description="Human readable name of the equipment")
-    type: str = Field(..., description="Category/type of equipment, e.g., Centrifugal Pump, Heat Exchanger")
-    location: str = Field(..., description="Plant section or physical location code")
-    description: Optional[str] = Field(None, description="Detailed equipment description")
-    metadata: Dict[str, Any] = Field(default_factory=dict, description="Additional properties or specifications")
+class EquipmentEntity(BaseModel):
+    tag: str = Field(..., description="Unique equipment tag, e.g., P-101A")
+    name: str = Field(..., description="Full descriptive name")
+    type: str = Field(..., description="Equipment category, e.g., Pump, Valve, Heat Exchanger")
+    location: Optional[str] = Field(None, description="Physical plant unit or building location")
 
-class WorkOrder(BaseModel):
-    id: str = Field(..., description="Unique Work Order identifier, e.g., WO-88392")
-    date: str = Field(..., description="Work Order issuance or completion date (ISO format)")
+class WorkOrderEntity(BaseModel):
+    id: str = Field(..., description="Work order code, e.g., WO-88405")
+    date: str = Field(..., description="Date of work order issuance/completion")
     description: str = Field(..., description="Summary of work performed or requested")
-    status: str = Field(..., description="Status of work order, e.g., OPEN, COMPLETED, IN_PROGRESS")
-    equipment_tag: Optional[str] = Field(None, description="Associated equipment tag")
-    severity: Optional[str] = Field(None, description="Priority or severity level")
-    assigned_to: Optional[str] = Field(None, description="Personnel assigned to the work order")
+    status: str = Field(..., description="Work order status, e.g., COMPLETED, IN_PROGRESS")
 
-class Failure(BaseModel):
-    id: str = Field(..., description="Unique failure record identifier, e.g., FAIL-2026-001")
-    date: str = Field(..., description="Date of failure occurrence")
-    description: str = Field(..., description="Observed symptom or failure description")
-    severity: str = Field(..., description="Impact level, e.g., CRITICAL, MAJOR, MINOR")
-    equipment_tag: Optional[str] = Field(None, description="Tag of equipment affected")
-    root_cause: Optional[str] = Field(None, description="Identified root cause of the failure")
+class FailureEntity(BaseModel):
+    id: str = Field(..., description="Failure incident code, e.g., FAIL-2026-004")
+    date: str = Field(..., description="Date failure incident was logged")
+    description: str = Field(..., description="Failure symptoms or root cause observation")
+    severity: str = Field(..., description="Incident severity level, e.g., CRITICAL, MAJOR, MINOR")
 
-class Procedure(BaseModel):
-    id: str = Field(..., description="Procedure code/ID, e.g., SOP-PUMP-004")
-    title: str = Field(..., description="Procedure document title")
-    version: str = Field(..., description="Version string, e.g., v2.1")
-    content: Optional[str] = Field(None, description="Procedure body text or step list")
-    equipment_tag: Optional[str] = Field(None, description="Applicable equipment tag or family")
+class ProcedureEntity(BaseModel):
+    id: str = Field(..., description="Procedure or SOP document ID, e.g., SOP-PUMP-004")
+    title: str = Field(..., description="Standard operating procedure title")
+    version: Optional[str] = Field("v1.0", description="Procedure version string")
 
-class Regulation(BaseModel):
-    code: str = Field(..., description="Regulatory compliance code, e.g., OSHA 1910.119")
-    title: str = Field(..., description="Official title of regulation")
-    authority: str = Field(..., description="Regulatory body, e.g., OSHA, EPA, ISO")
-    description: Optional[str] = Field(None, description="Summary of compliance requirements")
+class RegulationEntity(BaseModel):
+    code: str = Field(..., description="Regulatory standard identifier, e.g., OSHA 1910.119, API 570")
+    title: str = Field(..., description="Title of safety or maintenance regulation")
+    authority: str = Field(..., description="Regulatory body name, e.g., OSHA, API, EPA")
 
-class Personnel(BaseModel):
-    id: Optional[str] = Field(None, description="Employee ID or badge number")
-    name: str = Field(..., description="Full name of personnel")
-    role: str = Field(..., description="Role/Title, e.g., Maintenance Technician, Reliability Engineer")
+class PersonnelEntity(BaseModel):
+    name: str = Field(..., description="Individual technician or inspector name")
+    role: str = Field(..., description="Job role or title")
 
-class Document(BaseModel):
-    id: str = Field(..., description="Unique document ID (UUID)")
+class NormalizedDocument(BaseModel):
+    doc_id: str = Field(..., description="Unique UUID for document record")
     filename: str = Field(..., description="Original filename")
-    doc_type: DocType = Field(..., description="Document category type")
-    upload_date: str = Field(..., description="Upload timestamp in ISO format")
+    doc_type: DocType = Field(..., description="Detected or specified document category")
+    raw_text: str = Field(..., description="Extracted raw text content from OCR or parser")
+    equipment: List[EquipmentEntity] = Field(default_factory=list)
+    work_orders: List[WorkOrderEntity] = Field(default_factory=list)
+    failures: List[FailureEntity] = Field(default_factory=list)
+    procedures: List[ProcedureEntity] = Field(default_factory=list)
+    regulations: List[RegulationEntity] = Field(default_factory=list)
+    personnel: List[PersonnelEntity] = Field(default_factory=list)
     source_path: str = Field(..., description="Storage path or URI")
 
 # --- Graph Relationship Schema ---
@@ -95,13 +90,13 @@ class DocumentMetadata(BaseModel):
     id: str = Field(..., alias="_id", description="MongoDB unique document ID")
     filename: str = Field(..., description="Original file name")
     doc_type: DocType = Field(..., description="Document type tag")
-    upload_date: str = Field(default_factory=lambda: datetime.utcnow().isoformat(), description="Upload ISO timestamp")
+    upload_date: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat(), description="Upload ISO timestamp")
     uploaded_by: Optional[str] = Field("system", description="User ID of uploader")
     source_path: str = Field(..., description="Relative or storage path")
     sync_status: SyncStatus = Field(SyncStatus.PENDING, description="Current ingestion sync state")
     chroma_chunk_ids: List[str] = Field(default_factory=list, description="Vector chunk IDs stored in ChromaDB")
     neo4j_node_ids: List[str] = Field(default_factory=list, description="Node IDs written to Neo4j Graph")
-    extracted_entity_count: int = Field(0, description="Count of extracted entities")
+    extracted_entity_count: int = Field(0, ge=0, description="Count of extracted entities")
     error_log: List[str] = Field(default_factory=list, description="Log of any extraction errors")
 
     class Config:
@@ -110,7 +105,7 @@ class DocumentMetadata(BaseModel):
 class VectorChunkMetadata(BaseModel):
     doc_id: str = Field(..., description="Parent document UUID")
     doc_type: DocType = Field(..., description="Document category type")
-    chunk_index: int = Field(..., description="Zero-based index of chunk in document")
+    chunk_index: int = Field(..., ge=0, description="Zero-based index of chunk in document")
     page_number: Optional[int] = Field(1, description="Page number source")
     source_filename: str = Field(..., description="Filename of source document")
     equipment_tags: List[str] = Field(default_factory=list, description="Associated equipment tags in chunk")

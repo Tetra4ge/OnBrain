@@ -15,13 +15,16 @@ def detect_format(filename: str, file_bytes: bytes = None) -> Dict[str, Any]:
     fname_lower = filename.lower()
     
     # Check for P&ID pattern in filename (e.g., pid, p&id, p-id, p_id, drawing, dwg)
-    is_pid = bool(re.search(r'(\b(pid|drawing|dwg)\b|p[&-_.]?id)', fname_lower))
+    is_pid = bool(re.search(r'\b(pid|drawing|dwg|p[&\-._]?id)\b', fname_lower))
     
     mime_map = {
         ".json": "application/json",
         ".png": "image/png",
         ".jpg": "image/jpeg",
         ".jpeg": "image/jpeg",
+        ".webp": "image/webp",
+        ".tiff": "image/tiff",
+        ".bmp": "image/bmp",
         ".svg": "image/svg+xml",
         ".pdf": "application/pdf"
     }
@@ -63,7 +66,7 @@ def detect_format(filename: str, file_bytes: bytes = None) -> Dict[str, Any]:
             "strategy": "ocr",
             "extension": ext,
             "doc_type": DocType.MANUAL,
-            "mime_type": f"image/{ext.lstrip('.')}"
+            "mime_type": mime_map.get(ext, f"image/{ext.lstrip('.')}")
         }
 
     elif ext == ".json":

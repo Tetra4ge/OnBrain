@@ -34,6 +34,11 @@ async def upload_document(
                 status_code=413,
                 detail=f"File size exceeds maximum allowed limit of {MAX_UPLOAD_SIZE // (1024 * 1024)}MB"
             )
+        if not file.filename or not file.filename.strip():
+            raise HTTPException(
+                status_code=400,
+                detail="Filename is missing or empty in upload request."
+            )
         filename = file.filename
         
         format_info = await run_in_threadpool(detect_format, filename, content)
