@@ -1,0 +1,64 @@
+services:
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: onbrain-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - /app/app/__pycache__
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+      - neo4j
+      - chroma
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: onbrain-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - api
+
+  mongo:
+    image: mongo:6.0
+    container_name: onbrain-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  neo4j:
+    image: neo4j:5-community
+    container_name: onbrain-neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD:-password123}
+    volumes:
+      - neo4j-data:/data
+
+  chroma:
+    image: chromadb/chroma:latest
+    container_name: onbrain-chroma
+    ports:
+      - "8001:8000"
+    volumes:
+      - chroma-data:/chroma/chroma
+
+volumes:
+  mongo-data:
+  neo4j-data:
+  chroma-data:

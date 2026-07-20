@@ -1,0 +1,64 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+.venv/
+ENV/
+env/
+active/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+dist/
+dist-ssr/
+*.local
+
+# Environment variables & secrets
+.env
+.env.*
+!.env.example
+*.json
+!package.json
+!tsconfig.json
+!jsconfig.json
+!vite.config.js
+!tailwind.config.js
+
+# Docker database data directories (volumes mapping)
+mongo-data/
+neo4j-data/
+chroma-data/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Project-specific uploads and samples
+data/samples/*
+!data/samples/.gitkeep
