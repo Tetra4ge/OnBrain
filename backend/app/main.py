@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings  # noqa: F401
 from app.core import auth              # noqa: F401 — Firebase init side-effect
 from app.api.routes import documents_router, knowledge_router
+from app.api.routes.copilot import router as copilot_router
 
 logger = logging.getLogger(__name__)
 
@@ -48,6 +49,7 @@ app.add_middleware(
 # Routers
 app.include_router(documents_router, prefix="/api")
 app.include_router(knowledge_router, prefix="/api")
+app.include_router(copilot_router, prefix="/api")
 
 
 @app.get("/health", tags=["System"])
