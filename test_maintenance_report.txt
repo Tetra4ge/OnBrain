@@ -1,0 +1,12 @@
+﻿MAINTENANCE AND INSPECTION REPORT
+Date: 2026-03-12
+Equipment: We inspected the main feed pump P-101A and the secondary heat exchanger E-302 located in Unit 01.
+
+Findings: 
+During the routine check, we noticed severe vibration and spalling on the pump bearings. This resulted in a failure event logged as FAIL-2026-001. 
+
+Resolution:
+A work order WO-12345 was immediately generated to replace the bearings. The maintenance was assigned_to: "John Doe". 
+
+Compliance:
+All work was performed in accordance with safety procedure SOP-PUMP-004. Furthermore, this equipment must remain compliant with OSHA 1910.119 regulations for process safety management.
