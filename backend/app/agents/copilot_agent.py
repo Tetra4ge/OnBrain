@@ -24,24 +24,18 @@ Do NOT guess or hallucinate information.
 """
 
 def extract_equipment_tags(query: str) -> List[str]:
-    """Very basic heuristic to extract potential equipment tags (e.g., P-101A, XV-204B)"""
     matches = re.findall(r'[A-Z]{1,4}-\d{3,4}[A-Z]?', query)
     return list(set(matches))
 
 def calculate_confidence(search_results: List[Dict[str, Any]]) -> float:
-    """Calculate confidence based on relevance scores and corroboration"""
     if not search_results:
         return 0.0
-    
     scores = [res.get('relevance_score', 0.0) for res in search_results]
     avg_score = sum(scores) / len(scores)
-    
     unique_docs = len(set([res.get('doc_id') for res in search_results]))
-    
     confidence = avg_score
     if unique_docs > 1:
         confidence = min(1.0, confidence + 0.1)
-        
     return round(confidence, 4)
 
 class CopilotAgent:
@@ -52,11 +46,10 @@ class CopilotAgent:
             generation_config=genai.GenerationConfig(temperature=0.2)
         )
 
-    def process_query(self, query: str, history: List[Dict[str, str]] = None) -> Dict[str, Any]:
+    async def process_query_stream(self, query: str, history: List[Dict[str, str]] = None):
         """
-        Processes a user query by planning tool calls, synthesizing an answer, and scoring confidence.
+        Processes a user query and yields dictionaries representing SSE events.
         """
-        # 1. Query Planning & Retrieval (Single-pass)
         search_results = search_documents(query, limit=5)
         
         tags = extract_equipment_tags(query)
@@ -66,20 +59,19 @@ class CopilotAgent:
             if "error" not in graph_data:
                 graph_results.append(graph_data)
                 
-        # Calculate Confidence
         confidence = calculate_confidence(search_results)
         
-        # Fallback if confidence is too low
         if confidence < 0.5 and not graph_results:
-            return {
-                "answer": "I don't have enough source coverage to answer this confidently.",
+            yield {
+                "type": "meta",
                 "confidence": confidence,
                 "citations": [],
                 "contradiction_flag": False,
                 "contradiction_summary": ""
             }
+            yield {"type": "token", "text": "I don't have enough source coverage to answer this confidently."}
+            return
             
-        # Optional: Contradiction Check (Stretch goal)
         contradiction_flag = False
         contradiction_summary = ""
         if len(search_results) > 1:
@@ -87,7 +79,6 @@ class CopilotAgent:
             contradiction_flag = contradict_res.get("contradiction_found", False)
             contradiction_summary = contradict_res.get("summary", "")
 
-        # 2. Answer Synthesis
         context_parts = []
         citations_metadata = {}
         
@@ -111,31 +102,22 @@ class CopilotAgent:
             context_parts.append(f"\n--- Important Note --- \n{contradiction_summary}")
             
         context_str = "\n".join(context_parts)
-        
         prompt = f"User Query: {query}\n\nContext:\n{context_str}\n\nPlease provide a clear answer with inline citations."
         
-        # Execute LLM Call
-        chat = self.model.start_chat(history=self._format_history(history))
-        response = chat.send_message(prompt)
-        
-        # 3. Format Output
-        answer_text = response.text
-        
-        # Extract unique citations used in the answer
-        used_citations = []
-        found_refs = set(re.findall(r'\[([^\]]+)\]', answer_text))
-        for ref in found_refs:
-            if ref in citations_metadata:
-                used_citations.append(citations_metadata[ref])
-                
-        return {
-            "answer": answer_text,
+        yield {
+            "type": "meta",
             "confidence": confidence,
-            "citations": used_citations,
+            "citations": list(citations_metadata.values()),
             "contradiction_flag": contradiction_flag,
             "contradiction_summary": contradiction_summary
         }
         
+        chat = self.model.start_chat(history=self._format_history(history))
+        response = await chat.send_message_async(prompt, stream=True)
+        async for chunk in response:
+            if chunk.text:
+                yield {"type": "token", "text": chunk.text}
+                
     def _format_history(self, history: List[Dict[str, str]]) -> List[Dict[str, str]]:
         if not history:
             return []
