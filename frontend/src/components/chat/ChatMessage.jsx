@@ -13,21 +13,27 @@ export default function ChatMessage({ message }) {
   const isUser = role === 'user'
 
   return (
-    <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-6 animate-fade-up`}>
-      {/* AI avatar */}
-      {!isUser && (
-        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#EA580C] to-[#F7931A] flex items-center justify-center flex-shrink-0 mr-3 mt-1 shadow-[0_0_12px_rgba(247,147,26,0.3)]">
-          <span className="font-mono text-white text-xs font-bold">AI</span>
-        </div>
-      )}
+    <div className="flex justify-start mb-6 animate-fade-up w-full">
+      {/* Avatar */}
+      <div className="flex-shrink-0 mr-4 mt-1">
+        {isUser ? (
+          <div className="w-8 h-8 rounded-xl bg-[#242423] border border-white/10 flex items-center justify-center shadow-sm">
+            <span className="font-mono text-[#94A3B8] text-xs font-bold">U</span>
+          </div>
+        ) : (
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#EA580C] to-[#F7931A] flex items-center justify-center shadow-[0_0_12px_rgba(247,147,26,0.3)]">
+            <span className="font-mono text-white text-xs font-bold">AI</span>
+          </div>
+        )}
+      </div>
 
-      <div className={`max-w-[75%] ${isUser ? 'items-end' : 'items-start'} flex flex-col gap-2`}>
+      <div className="flex-1 min-w-0 flex flex-col gap-3">
         {/* Bubble */}
         <div
-          className={`rounded-2xl px-5 py-4 text-sm leading-relaxed font-body ${
+          className={`rounded-2xl px-5 py-4 text-base leading-relaxed font-body ${
             isUser
-              ? 'bg-gradient-to-br from-[#EA580C]/20 to-[#F7931A]/20 border border-[#F7931A]/30 text-white rounded-tr-sm'
-              : 'bg-[#242423] border border-white/8 text-white/90 rounded-tl-sm'
+              ? 'bg-[#242423]/50 border border-white/5 text-white'
+              : 'bg-transparent text-white/90'
           }`}
         >
           {content}
@@ -42,13 +48,6 @@ export default function ChatMessage({ message }) {
           />
         )}
       </div>
-
-      {/* User avatar */}
-      {isUser && (
-        <div className="w-8 h-8 rounded-xl bg-[#242423] border border-white/10 flex items-center justify-center flex-shrink-0 ml-3 mt-1">
-          <span className="font-mono text-[#94A3B8] text-xs font-bold">U</span>
-        </div>
-      )}
     </div>
   )
 }
