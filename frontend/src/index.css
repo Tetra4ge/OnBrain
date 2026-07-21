@@ -1,55 +1,237 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+/* ============================================================
+   OnBrain Design System — Bitcoin DeFi Aesthetic
+   Palette: True Void + Bitcoin Orange + Tuscan Sun + Carbon Black
+   ============================================================ */
+
 @import "tailwindcss";
 
+/* Google Fonts are loaded in index.html */
+
+/* ── Design Tokens ─────────────────────────────────────────── */
 :root {
-  --bg-mint: #DCEEE7;
-  --surface-white: #FFFFFF;
-  --primary-dark: #0D3B36;
-  --accent-teal: #1D9E75;
-  --accent-amber: #F4B740;
-  --accent-coral: #F0785A;
-  --text-muted: #6B7B76;
-  --border-mint: rgba(13, 59, 54, 0.08);
-  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  /* Backgrounds */
+  --bg-void:        #030304;   /* True Void — deepest black */
+  --surface:        #242423;   /* Carbon Black — elevated surfaces, cards */
+  --surface-mid:    #1a1a19;   /* Mid-surface for sidebar / panels */
+
+  /* Text */
+  --fg:             #FFFFFF;   /* Pure Light — primary text */
+  --muted:          #94A3B8;   /* Stardust — secondary / meta text */
+
+  /* Borders */
+  --border:         #1E293B;   /* Dim Boundary */
+
+  /* Accent palette */
+  --orange-primary: #F7931A;   /* Bitcoin Orange — CTAs, active, links */
+  --orange-secondary:#EA580C;  /* Burnt Orange — gradients, depth */
+  --gold:           #F5CB5C;   /* Tuscan Sun — highlights, success, gradients */
+
+  /* Typography */
+  --font-heading:   'Space Grotesk', system-ui, sans-serif;
+  --font-body:      'Inter', system-ui, sans-serif;
+  --font-mono:      'JetBrains Mono', 'Courier New', monospace;
+}
+
+/* ── Tailwind v4 Theme Extension ───────────────────────────── */
+@theme {
+  --color-void:     #030304;
+  --color-surface:  #242423;
+  --color-orange:   #F7931A;
+  --color-burnt:    #EA580C;
+  --color-gold:     #F5CB5C;
+  --color-muted:    #94A3B8;
+  --color-border:   #1E293B;
+
+  --font-family-heading: 'Space Grotesk', system-ui, sans-serif;
+  --font-family-body:    'Inter', system-ui, sans-serif;
+  --font-family-mono:    'JetBrains Mono', monospace;
+}
+
+/* ── Base Reset ────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  font-family: var(--font-sans);
-  background-color: var(--bg-mint);
-  color: #0D3B36;
-  margin: 0;
-  padding: 0;
+  font-family: var(--font-body);
+  background-color: var(--bg-void);
+  color: var(--fg);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
 }
 
-/* Custom Soft Glass & Card Shadow Utility */
-.shadow-soft {
-  box-shadow: 0 8px 30px rgba(13, 59, 54, 0.04), 0 2px 8px rgba(13, 59, 54, 0.02);
+/* ── Typography Utility Classes ────────────────────────────── */
+.font-heading { font-family: var(--font-heading); }
+.font-body    { font-family: var(--font-body); }
+.font-mono    { font-family: var(--font-mono); }
+
+/* ── Gradient Text ─────────────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(to right, #F7931A, #F5CB5C);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.shadow-card-hover {
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.shadow-card-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 36px rgba(13, 59, 54, 0.08), 0 4px 12px rgba(13, 59, 54, 0.04);
+.gradient-text-deep {
+  background: linear-gradient(to right, #EA580C, #F7931A);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+/* ── Background Grid Pattern ───────────────────────────────── */
+.bg-grid-pattern {
+  background-size: 50px 50px;
+  background-image:
+    linear-gradient(to right,  rgba(30, 41, 59, 0.5) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(30, 41, 59, 0.5) 1px, transparent 1px);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+          mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
 }
-::-webkit-scrollbar-track {
-  background: rgba(13, 59, 54, 0.03);
-  border-radius: 8px;
+
+/* ── Glass / Morphism ──────────────────────────────────────── */
+.glass-card {
+  background: rgba(36, 36, 35, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
-::-webkit-scrollbar-thumb {
-  background: rgba(13, 59, 54, 0.15);
-  border-radius: 8px;
+
+.glass-dark {
+  background: rgba(3, 3, 4, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(13, 59, 54, 0.25);
+
+/* ── Glow Utilities ────────────────────────────────────────── */
+.glow-orange {
+  box-shadow: 0 0 20px -5px rgba(247, 147, 26, 0.5);
+}
+.glow-orange-lg {
+  box-shadow: 0 0 40px -5px rgba(247, 147, 26, 0.4), 0 0 80px -20px rgba(234, 88, 12, 0.3);
+}
+.glow-gold {
+  box-shadow: 0 0 20px rgba(245, 203, 92, 0.3);
+}
+.glow-subtle {
+  box-shadow: 0 0 50px -10px rgba(247, 147, 26, 0.1);
+}
+
+/* ── Animations ────────────────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-18px); }
+}
+
+@keyframes pulse-ring {
+  0%   { transform: scale(0.95); opacity: 1; }
+  100% { transform: scale(1.4);  opacity: 0; }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes spin-reverse {
+  from { transform: rotate(360deg); }
+  to   { transform: rotate(0deg); }
+}
+
+@keyframes ticker {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.animate-float       { animation: float 8s ease-in-out infinite; }
+.animate-spin-slow   { animation: spin-slow 12s linear infinite; }
+.animate-spin-reverse{ animation: spin-reverse 18s linear infinite; }
+.animate-ticker      { animation: ticker 30s linear infinite; }
+.animate-fade-up     { animation: fade-up 0.6s ease-out forwards; }
+.animate-pulse-ring  { animation: pulse-ring 2s ease-out infinite; }
+
+/* Staggered delays */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-500 { animation-delay: 0.5s; }
+.delay-700 { animation-delay: 0.7s; }
+.delay-1000{ animation-delay: 1.0s; }
+
+/* ── Reduce Motion ─────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .animate-float,
+  .animate-spin-slow,
+  .animate-spin-reverse,
+  .animate-ticker,
+  .animate-fade-up,
+  .animate-pulse-ring,
+  .animate-bounce,
+  .animate-ping {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ── Scrollbar Styling ─────────────────────────────────────── */
+::-webkit-scrollbar       { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: rgba(36, 36, 35, 0.5); border-radius: 8px; }
+::-webkit-scrollbar-thumb { background: rgba(247, 147, 26, 0.3); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(247, 147, 26, 0.6); }
+
+/* ── Focus Rings ───────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--orange-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Selection ─────────────────────────────────────────────── */
+::selection {
+  background: rgba(247, 147, 26, 0.3);
+  color: #fff;
+}
+
+/* ── Corner Accent borders (for "How It Works" cards) ──────── */
+.corner-accent {
+  position: relative;
+}
+.corner-accent::before,
+.corner-accent::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-color: rgba(247, 147, 26, 0.6);
+  border-style: solid;
+}
+.corner-accent::before {
+  top: 0; left: 0;
+  border-width: 1px 0 0 1px;
+  border-radius: 4px 0 0 0;
+}
+.corner-accent::after {
+  bottom: 0; right: 0;
+  border-width: 0 1px 1px 0;
+  border-radius: 0 0 4px 0;
 }
