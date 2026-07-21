@@ -8,7 +8,7 @@ import { useChat } from '../hooks/useChat'
 import { Trash2, Info } from 'lucide-react'
 
 // Max content width for the chat column
-const CHAT_MAX_W = '52rem'
+const CHAT_MAX_W = '48rem'
 
 export default function CopilotPage() {
   const { messages, loading, sendMessage, clearChat } = useChat()
