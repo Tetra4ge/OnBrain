@@ -7,64 +7,93 @@ import TypingIndicator from '../components/chat/TypingIndicator'
 import { useChat } from '../hooks/useChat'
 import { Trash2, Info } from 'lucide-react'
 
+// Max content width for the chat column
+const CHAT_MAX_W = '52rem'
+
 export default function CopilotPage() {
   const { messages, loading, sendMessage, clearChat } = useChat()
   const bottomRef = useRef(null)
 
-  // Auto-scroll to bottom on new messages
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, loading])
 
   return (
-    <div className="flex h-screen bg-[#030304] overflow-hidden">
+    <div style={{ display: 'flex', height: '100vh', background: '#030304', overflow: 'hidden' }}>
       {/* Sidebar */}
       <AppSidebar />
 
-      {/* Main content */}
-      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+      {/* Main column */}
+      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, overflow: 'hidden' }}>
         {/* Header */}
         <AppHeader title="Copilot" />
 
-        {/* Chat area */}
-        <div className="flex-1 overflow-y-auto px-4 md:px-8 py-6 relative">
-          {/* Subtle background glow */}
-          <div className="absolute top-0 right-0 w-96 h-96 bg-[#F7931A] opacity-[0.03] blur-[120px] rounded-full pointer-events-none" />
+        {/* Chat scroll area */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem 1rem' }}>
+          {/* Ambient glow */}
+          <div
+            className="pointer-events-none"
+            style={{
+              position: 'fixed', top: 0, right: 0,
+              width: '24rem', height: '24rem',
+              background: '#F7931A', opacity: 0.03,
+              filter: 'blur(120px)', borderRadius: '50%',
+            }}
+          />
 
-          {/* Info banner */}
-          {messages.length <= 1 && (
-            <div className="max-w-2xl mx-auto mb-6">
-              <div className="flex items-start gap-3 bg-[#F5CB5C]/8 border border-[#F5CB5C]/20 rounded-xl px-4 py-3">
-                <Info size={15} className="text-[#F5CB5C] flex-shrink-0 mt-0.5" />
+          {/* Content column — centered */}
+          <div style={{ width: '100%', maxWidth: CHAT_MAX_W, margin: '0 auto' }}>
+            {/* Info banner — shown only on first load */}
+            {messages.length <= 1 && (
+              <div
+                className="mb-6"
+                style={{
+                  display: 'flex', alignItems: 'flex-start', gap: '0.75rem',
+                  background: 'rgba(245,203,92,0.07)',
+                  border: '1px solid rgba(245,203,92,0.2)',
+                  borderRadius: '0.875rem', padding: '0.875rem 1.125rem',
+                }}
+              >
+                <Info size={15} style={{ color: '#F5CB5C', flexShrink: 0, marginTop: '0.125rem' }} />
                 <p className="font-mono text-[11px] text-[#94A3B8] leading-relaxed tracking-wide">
-                  Running against <span className="text-[#F5CB5C]">mock data</span> — upload documents to unlock real knowledge graph queries. API status shown in the header.
+                  Running against <span style={{ color: '#F5CB5C' }}>mock data</span> — upload documents to unlock real knowledge graph queries. API status shown in the header.
                 </p>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Messages */}
-          <div className="max-w-3xl mx-auto">
+            {/* Messages */}
             {messages.map((msg) => (
               <ChatMessage key={msg.id} message={msg} />
             ))}
+
             {loading && <TypingIndicator />}
             <div ref={bottomRef} />
           </div>
         </div>
 
-        {/* Chat input */}
-        <div className="max-w-3xl w-full mx-auto w-full">
-          <ChatInput onSend={sendMessage} disabled={loading} />
+        {/* Input area — full-width border, constrained content */}
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', background: 'rgba(3,3,4,0.85)' }}>
+          <div style={{ width: '100%', maxWidth: CHAT_MAX_W, margin: '0 auto' }}>
+            <ChatInput onSend={sendMessage} disabled={loading} />
+          </div>
         </div>
       </div>
 
-      {/* Clear chat button — floating */}
+      {/* Clear chat — floating */}
       {messages.length > 1 && (
         <button
           onClick={clearChat}
           title="Clear conversation"
-          className="fixed bottom-24 right-6 w-9 h-9 rounded-xl bg-[#242423] border border-white/10 flex items-center justify-center text-[#94A3B8] hover:text-[#EA580C] hover:border-[#EA580C]/40 transition-all duration-200 shadow-lg z-20"
+          style={{
+            position: 'fixed', bottom: '6.5rem', right: '1.5rem',
+            width: '2.25rem', height: '2.25rem', borderRadius: '0.75rem',
+            background: '#242423', border: '1px solid rgba(255,255,255,0.1)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: '#94A3B8', cursor: 'pointer', zIndex: 20,
+            transition: 'all 0.2s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.color = '#EA580C'; e.currentTarget.style.borderColor = 'rgba(234,88,12,0.4)' }}
+          onMouseLeave={e => { e.currentTarget.style.color = '#94A3B8'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)' }}
         >
           <Trash2 size={15} />
         </button>

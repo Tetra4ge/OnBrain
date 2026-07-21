@@ -38,7 +38,7 @@ export default function ChatInput({ onSend, disabled = false }) {
   }
 
   return (
-    <div className="border-t border-white/8 bg-[#030304]/80 backdrop-blur-sm px-4 py-4">
+    <div className="px-4 py-4">
       {/* Quick action chips */}
       <div className="flex flex-wrap gap-2 mb-3">
         {QUICK_ACTIONS.map((action) => (
