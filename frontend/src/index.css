@@ -1,62 +1,51 @@
 /* ============================================================
    OnBrain Design System — Bitcoin DeFi Aesthetic
    Palette: True Void + Bitcoin Orange + Tuscan Sun + Carbon Black
+   Fonts: Merriweather (headings) · Slabo 27px (body) · JetBrains Mono (data)
    ============================================================ */
 
 @import "tailwindcss";
 
-/* Google Fonts are loaded in index.html */
-
 /* ── Design Tokens ─────────────────────────────────────────── */
 :root {
   /* Backgrounds */
-  --bg-void:        #030304;   /* True Void — deepest black */
-  --surface:        #242423;   /* Carbon Black — elevated surfaces, cards */
-  --surface-mid:    #1a1a19;   /* Mid-surface for sidebar / panels */
+  --bg-void:          #030304;   /* True Void */
+  --surface:          #242423;   /* Carbon Black */
+  --surface-mid:      #1a1a19;
 
   /* Text */
-  --fg:             #FFFFFF;   /* Pure Light — primary text */
-  --muted:          #94A3B8;   /* Stardust — secondary / meta text */
+  --fg:               #FFFFFF;
+  --muted:            #94A3B8;
 
   /* Borders */
-  --border:         #1E293B;   /* Dim Boundary */
+  --border:           #1E293B;
 
-  /* Accent palette */
-  --orange-primary: #F7931A;   /* Bitcoin Orange — CTAs, active, links */
-  --orange-secondary:#EA580C;  /* Burnt Orange — gradients, depth */
-  --gold:           #F5CB5C;   /* Tuscan Sun — highlights, success, gradients */
+  /* Accents */
+  --orange-primary:   #F7931A;   /* Bitcoin Orange */
+  --orange-secondary: #EA580C;   /* Burnt Orange */
+  --gold:             #F5CB5C;   /* Tuscan Sun */
 
   /* Typography */
-  --font-heading:   'Space Grotesk', system-ui, sans-serif;
-  --font-body:      'Inter', system-ui, sans-serif;
-  --font-mono:      'JetBrains Mono', 'Courier New', monospace;
+  --font-heading: 'Merriweather', Georgia, serif;
+  --font-body:    'Slabo 27px', Georgia, serif;
+  --font-mono:    'JetBrains Mono', 'Courier New', monospace;
 }
 
 /* ── Tailwind v4 Theme Extension ───────────────────────────── */
 @theme {
-  --color-void:     #030304;
-  --color-surface:  #242423;
-  --color-orange:   #F7931A;
-  --color-burnt:    #EA580C;
-  --color-gold:     #F5CB5C;
-  --color-muted:    #94A3B8;
-  --color-border:   #1E293B;
-
-  --font-family-heading: 'Space Grotesk', system-ui, sans-serif;
-  --font-family-body:    'Inter', system-ui, sans-serif;
-  --font-family-mono:    'JetBrains Mono', monospace;
+  --color-void:    #030304;
+  --color-surface: #242423;
+  --color-orange:  #F7931A;
+  --color-burnt:   #EA580C;
+  --color-gold:    #F5CB5C;
+  --color-muted:   #94A3B8;
+  --color-border:  #1E293B;
 }
 
 /* ── Base Reset ────────────────────────────────────────────── */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font-body);
@@ -65,7 +54,36 @@ body {
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  line-height: 1.6;
+  line-height: 1.7;
+}
+
+/* ── Layout Container Utilities (bypasses Tailwind JIT issues) ─ */
+/* Use these on wrapping divs to guarantee max-width + centering */
+.wrap {
+  width: 100%;
+  max-width: 80rem;   /* 1280px — equivalent to max-w-7xl */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.wrap-narrow {
+  width: 100%;
+  max-width: 48rem;   /* 768px — equivalent to max-w-3xl */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.wrap-mid {
+  width: 100%;
+  max-width: 64rem;   /* 1024px — equivalent to max-w-5xl */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 /* ── Typography Utility Classes ────────────────────────────── */
@@ -114,28 +132,27 @@ body {
 }
 
 /* ── Glow Utilities ────────────────────────────────────────── */
-.glow-orange {
-  box-shadow: 0 0 20px -5px rgba(247, 147, 26, 0.5);
-}
-.glow-orange-lg {
-  box-shadow: 0 0 40px -5px rgba(247, 147, 26, 0.4), 0 0 80px -20px rgba(234, 88, 12, 0.3);
-}
-.glow-gold {
-  box-shadow: 0 0 20px rgba(245, 203, 92, 0.3);
-}
-.glow-subtle {
-  box-shadow: 0 0 50px -10px rgba(247, 147, 26, 0.1);
+.glow-orange    { box-shadow: 0 0 20px -5px rgba(247, 147, 26, 0.5); }
+.glow-orange-lg { box-shadow: 0 0 40px -5px rgba(247, 147, 26, 0.4), 0 0 80px -20px rgba(234, 88, 12, 0.3); }
+.glow-gold      { box-shadow: 0 0 20px rgba(245, 203, 92, 0.3); }
+.glow-subtle    { box-shadow: 0 0 50px -10px rgba(247, 147, 26, 0.1); }
+
+/* ── Section Label ─────────────────────────────────────────── */
+.section-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #F7931A;
+  text-align: center;
+  margin-bottom: 1rem;
 }
 
 /* ── Animations ────────────────────────────────────────────── */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50%       { transform: translateY(-18px); }
-}
-
-@keyframes pulse-ring {
-  0%   { transform: scale(0.95); opacity: 1; }
-  100% { transform: scale(1.4);  opacity: 0; }
 }
 
 @keyframes spin-slow {
@@ -158,71 +175,55 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position: 200% center; }
+@keyframes pulse-ring {
+  0%   { transform: scale(0.95); opacity: 1; }
+  100% { transform: scale(1.4);  opacity: 0; }
 }
 
-.animate-float       { animation: float 8s ease-in-out infinite; }
-.animate-spin-slow   { animation: spin-slow 12s linear infinite; }
-.animate-spin-reverse{ animation: spin-reverse 18s linear infinite; }
-.animate-ticker      { animation: ticker 30s linear infinite; }
-.animate-fade-up     { animation: fade-up 0.6s ease-out forwards; }
-.animate-pulse-ring  { animation: pulse-ring 2s ease-out infinite; }
-
-/* Staggered delays */
-.delay-100 { animation-delay: 0.1s; }
-.delay-200 { animation-delay: 0.2s; }
-.delay-300 { animation-delay: 0.3s; }
-.delay-500 { animation-delay: 0.5s; }
-.delay-700 { animation-delay: 0.7s; }
-.delay-1000{ animation-delay: 1.0s; }
+.animate-float        { animation: float 8s ease-in-out infinite; }
+.animate-spin-slow    { animation: spin-slow 12s linear infinite; }
+.animate-spin-reverse { animation: spin-reverse 18s linear infinite; }
+.animate-ticker       { animation: ticker 30s linear infinite; }
+.animate-fade-up      { animation: fade-up 0.6s ease-out forwards; }
+.animate-pulse-ring   { animation: pulse-ring 2s ease-out infinite; }
 
 /* ── Reduce Motion ─────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  .animate-float,
-  .animate-spin-slow,
-  .animate-spin-reverse,
-  .animate-ticker,
-  .animate-fade-up,
-  .animate-pulse-ring,
-  .animate-bounce,
-  .animate-ping {
+  .animate-float, .animate-spin-slow, .animate-spin-reverse,
+  .animate-ticker, .animate-fade-up, .animate-pulse-ring,
+  .animate-bounce, .animate-ping {
     animation: none !important;
     transition: none !important;
   }
 }
 
-/* ── Scrollbar Styling ─────────────────────────────────────── */
+/* ── Scrollbar ─────────────────────────────────────────────── */
 ::-webkit-scrollbar       { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: rgba(36, 36, 35, 0.5); border-radius: 8px; }
 ::-webkit-scrollbar-thumb { background: rgba(247, 147, 26, 0.3); border-radius: 8px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(247, 147, 26, 0.6); }
 
-/* ── Focus Rings ───────────────────────────────────────────── */
+/* ── Focus & Selection ─────────────────────────────────────── */
 :focus-visible {
   outline: 2px solid var(--orange-primary);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-/* ── Selection ─────────────────────────────────────────────── */
 ::selection {
   background: rgba(247, 147, 26, 0.3);
   color: #fff;
 }
 
-/* ── Corner Accent borders (for "How It Works" cards) ──────── */
-.corner-accent {
-  position: relative;
-}
+/* ── Corner Accent (How It Works cards) ────────────────────── */
+.corner-accent { position: relative; }
 .corner-accent::before,
 .corner-accent::after {
   content: '';
   position: absolute;
   width: 16px;
   height: 16px;
-  border-color: rgba(247, 147, 26, 0.6);
+  border-color: rgba(247, 147, 26, 0.5);
   border-style: solid;
 }
 .corner-accent::before {
