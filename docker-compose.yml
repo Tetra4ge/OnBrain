@@ -12,9 +12,6 @@ services:
     env_file:
       - ./backend/.env
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-    depends_on:
-      - neo4j
-      - chroma
 
   frontend:
     build:
@@ -32,26 +29,3 @@ services:
       - ./frontend/.env
     depends_on:
       - api
-
-  neo4j:
-    image: neo4j:5-community
-    container_name: onbrain-neo4j
-    ports:
-      - "127.0.0.1:7474:7474"
-      - "127.0.0.1:7687:7687"
-    environment:
-      - NEO4J_AUTH=${NEO4J_AUTH:-neo4j/strongpassword}
-    volumes:
-      - neo4j-data:/data
-
-  chroma:
-    image: chromadb/chroma:latest
-    container_name: onbrain-chroma
-    ports:
-      - "127.0.0.1:8001:8000"
-    volumes:
-      - chroma-data:/chroma/chroma
-
-volumes:
-  neo4j-data:
-  chroma-data:
