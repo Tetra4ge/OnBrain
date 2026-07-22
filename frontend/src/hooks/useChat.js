@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { getMockCopilotResponse } from '../lib/mockResponses'
+import { streamCopilotResponse } from '../lib/api'
 
 const WELCOME_MESSAGE = {
   id: 'welcome',
@@ -16,6 +16,8 @@ export function useChat() {
   const [loading,   setLoading]   = useState(false)
 
   const sendMessage = useCallback(async (text) => {
+    const sessionId = localStorage.getItem('onbrain_chat_session') || crypto.randomUUID()
+    localStorage.setItem('onbrain_chat_session', sessionId)
     const userMsg = {
       id:      `user-${Date.now()}`,
       role:    'user',
@@ -26,25 +28,34 @@ export function useChat() {
     setLoading(true)
 
     try {
-      // TODO Phase 9: replace getMockCopilotResponse with real API call:
-      // const res = await fetch('/api/copilot/query', { method: 'POST', body: JSON.stringify({ question: text }), headers: { 'Content-Type': 'application/json' } })
-      // const data = await res.json()
-      const data = await getMockCopilotResponse(text)
-
+      const aiId = `ai-${Date.now()}`
       const aiMsg = {
-        id:               `ai-${Date.now()}`,
+        id:               aiId,
         role:             'assistant',
-        content:          data.answer,
-        confidence:       data.confidence,
-        confidence_score: data.confidence_score,
-        citations:        data.citations ?? [],
+        content:          '',
+        confidence:       'medium',
+        confidence_score: 0,
+        citations:        [],
       }
       setMessages((prev) => [...prev, aiMsg])
+      await streamCopilotResponse({
+        query: text,
+        sessionId,
+        onEvent: (event) => setMessages(prev => prev.map(message => {
+          if (message.id !== aiId) return message
+          if (event.type === 'token') return { ...message, content: message.content + event.text }
+          if (event.type === 'meta') {
+            const score = event.confidence ?? 0
+            return { ...message, confidence: score >= 0.75 ? 'high' : score >= 0.45 ? 'medium' : 'low', confidence_score: score, citations: event.citations ?? [] }
+          }
+          return message
+        })),
+      })
     } catch (err) {
       const errMsg = {
         id:         `err-${Date.now()}`,
         role:       'assistant',
-        content:    'Sorry, I encountered an error. Please try again.',
+        content:    `Sorry, I couldn’t complete that request: ${err.message}`,
         confidence: 'low',
         confidence_score: 0,
         citations:  [],

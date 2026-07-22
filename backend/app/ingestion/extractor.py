@@ -17,13 +17,13 @@ def extract_entities_and_relationships(text: str, doc_type: DocType, filename: s
     gemini_key = settings.GEMINI_API_KEY
 
     # Check if a real LLM key is configured
-    if groq_key and not groq_key.startswith("your_"):
+    if settings.USE_LLM_EXTRACTION and groq_key and not groq_key.startswith("your_"):
         try:
             return _extract_with_groq(text, doc_type, groq_key)
         except Exception as e:
             logger.warning(f"Groq LLM extraction failed: {e}. Falling back to deterministic extraction.")
 
-    if gemini_key and not gemini_key.startswith("your_"):
+    if settings.USE_LLM_EXTRACTION and gemini_key and not gemini_key.startswith("your_"):
         try:
             return _extract_with_gemini(text, doc_type, gemini_key)
         except Exception as e:
@@ -179,7 +179,7 @@ def _extract_deterministic(text: str, doc_type: DocType, filename: str) -> Dict[
 def _extract_with_groq(text: str, doc_type: DocType, api_key: str) -> Dict[str, Any]:
     """Uses Groq Llama 3.3 70B API for structured entity extraction."""
     from groq import Groq
-    client = Groq(api_key=api_key)
+    client = Groq(api_key=api_key, timeout=20.0, max_retries=1)
     
     json_schema_template = """{
   "equipment": [{"tag": "", "name": "", "type": "", "location": ""}],

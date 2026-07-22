@@ -4,7 +4,10 @@ Handles cloud ChromaDB connection (api.trychroma.com), Gemini text embeddings,
 chunk upserts, and semantic search with relevance scoring for the OnBrain RAG layer.
 """
 
+import hashlib
 import logging
+import math
+import re
 from typing import Any, Dict, List, Optional
 
 import google.generativeai as genai
@@ -18,6 +21,7 @@ logger = logging.getLogger(__name__)
 _chroma_client = None
 _collection = None
 COLLECTION_NAME = "documents"
+FALLBACK_EMBEDDING_DIMENSIONS = 384
 
 
 def _get_chroma_client():
@@ -78,41 +82,31 @@ def get_collection():
 # Gemini Embedding — fallback chain (gemini-embedding-2 → gemini-embedding-001)
 # ---------------------------------------------------------------------------
 
-def _embed_text(text: str, task_type: str = "retrieval_document") -> Optional[List[float]]:
-    """
-    Generate an embedding vector via Gemini.
-    task_type: 'retrieval_document' for storage, 'retrieval_query' for search queries.
-    Returns None on failure (chunk will be skipped).
-    """
-    if not settings.GEMINI_API_KEY:
-        logger.warning("GEMINI_API_KEY not set — cannot generate embeddings.")
-        return None
-    try:
-        genai.configure(api_key=settings.GEMINI_API_KEY)
-        
-        # Try gemini-embedding-2 first
+def _embed_text(text: str, task_type: str = "retrieval_document") -> List[float]:
+    """Generate a Gemini embedding when available, otherwise a local stable vector."""
+    api_key = settings.GEMINI_API_KEY
+    if api_key and not api_key.startswith("your_"):
         try:
-            result = genai.embed_content(
-                model="models/gemini-embedding-2",
-                content=text,
-                task_type=task_type,
-            )
-            return result["embedding"]
-        except Exception as e1:
-            logger.warning(f"Embedding with models/gemini-embedding-2 failed: {e1}. Trying models/gemini-embedding-001...")
+            genai.configure(api_key=api_key)
             try:
-                result = genai.embed_content(
-                    model="models/gemini-embedding-001",
-                    content=text,
-                    task_type=task_type,
-                )
-                return result["embedding"]
-            except Exception as e2:
-                logger.warning(f"Embedding with models/gemini-embedding-001 failed: {e2}.")
-                return None
-    except Exception as e:
-        logger.error(f"All Gemini embedding attempts failed: {e}")
-        return None
+                result = genai.embed_content(model="models/gemini-embedding-2", content=text, task_type=task_type)
+            except Exception:
+                result = genai.embed_content(model="models/gemini-embedding-001", content=text, task_type=task_type)
+            return result["embedding"]
+        except Exception as exc:
+            logger.warning("Gemini embeddings failed (%s); using local embeddings.", exc)
+    return _fallback_embedding(text)
+
+
+def _fallback_embedding(text: str) -> List[float]:
+    """Dependency-free hashed bag-of-words embedding for local/demo reliability."""
+    vector = [0.0] * FALLBACK_EMBEDDING_DIMENSIONS
+    for token in re.findall(r"[a-z0-9][a-z0-9_-]*", text.lower()):
+        digest = hashlib.blake2b(token.encode("utf-8"), digest_size=8).digest()
+        index = int.from_bytes(digest[:4], "big") % FALLBACK_EMBEDDING_DIMENSIONS
+        vector[index] += 1.0 if digest[4] & 1 else -1.0
+    magnitude = math.sqrt(sum(value * value for value in vector))
+    return [value / magnitude for value in vector] if magnitude else vector
 
 
 # ---------------------------------------------------------------------------

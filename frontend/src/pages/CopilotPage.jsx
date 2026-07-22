@@ -82,7 +82,7 @@ export default function CopilotPage() {
               >
                 <Info size={15} style={{ color: '#F5CB5C', flexShrink: 0, marginTop: '0.125rem' }} />
                 <p className="font-mono text-[11px] text-[#94A3B8] leading-relaxed tracking-wide">
-                  Running against <span style={{ color: '#F5CB5C' }}>mock data</span> — upload documents to unlock real knowledge graph queries. API status shown in the header.
+                  Answers are grounded in your indexed documents and knowledge graph. Upload evidence first, then ask a specific question or include an equipment tag.
                 </p>
               </div>
             )}

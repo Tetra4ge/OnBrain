@@ -11,6 +11,7 @@ from app.ingestion import (
     parse_pid_image
 )
 from app.knowledge.sync import sync_document
+from app.models.schemas import DocType
 
 router = APIRouter(prefix="/documents", tags=["Documents & Ingestion"])
 
@@ -41,13 +42,17 @@ async def upload_document(
                 detail="Filename is missing or empty in upload request."
             )
         filename = file.filename
+        if doc_type_override and doc_type_override not in {item.value for item in DocType}:
+            raise HTTPException(status_code=400, detail="Invalid document type override.")
         
         format_info = await run_in_threadpool(detect_format, filename, content)
         if doc_type_override:
-            format_info["doc_type"] = doc_type_override
+            format_info["doc_type"] = DocType(doc_type_override)
 
         text_result = await run_in_threadpool(extract_document_text, content, filename, format_info)
-        raw_text = text_result["raw_text"]
+        raw_text = text_result["raw_text"].strip()
+        if not raw_text or raw_text.startswith("[Document content") or raw_text.startswith("[Extraction Error"):
+            raise HTTPException(status_code=422, detail="No readable text could be extracted from this file.")
 
         extracted = await run_in_threadpool(
             extract_entities_and_relationships, raw_text, format_info["doc_type"], filename
@@ -126,7 +131,9 @@ async def process_sample_document(relative_path: str) -> Dict[str, Any]:
         filename = candidate_path.name
         format_info = await run_in_threadpool(detect_format, filename, content)
         text_result = await run_in_threadpool(extract_document_text, content, filename, format_info)
-        raw_text = text_result["raw_text"]
+        raw_text = text_result["raw_text"].strip()
+        if not raw_text or raw_text.startswith("[Document content") or raw_text.startswith("[Extraction Error"):
+            raise HTTPException(status_code=422, detail="No readable text could be extracted from this sample.")
 
         extracted = await run_in_threadpool(
             extract_entities_and_relationships, raw_text, format_info["doc_type"], filename

@@ -7,7 +7,7 @@
 .ob-logo-mark { width: 30px; height: 30px; display: inline-grid; place-items: center; color: var(--ink); background: var(--amber); border-radius: 7px; }
 .ob-nav-links { display: flex; gap: 30px; color: var(--muted-cream); font-size: 13px; font-weight: 700; }.ob-nav-links a:hover { color: var(--amber); }
 .ob-nav-cta { display: flex; align-items: center; gap: 6px; color: var(--amber); font-size: 13px; font-weight: 800; }
-.ob-hero { position: relative; z-index: 1; display: grid; grid-template-columns: 1.03fr .97fr; gap: 64px; min-height: 620px; align-items: center; padding-top: 64px; padding-bottom: 88px; }
+.ob-hero { position: relative; z-index: 1; display: grid; grid-template-columns: 1.03fr .97fr; gap: 64px; min-height: 480px; align-items: center; padding-top: 40px; padding-bottom: 88px; }
 .ob-eyebrow, .ob-kicker { color: var(--amber); font-family: var(--font-heading); font-size: 13px; font-weight: normal; letter-spacing: normal; text-transform: uppercase; }.ob-eyebrow { display: flex; align-items: center; gap: 10px; }.ob-eyebrow span { width: 30px; height: 1px; background: var(--amber); }
 .ob-hero h1, .ob-section h2, .ob-workflow h2, .ob-final h2 { margin: 20px 0 23px; color: var(--cream); font-family: var(--font-heading); font-size: clamp(3rem, 5vw, 5.5rem); font-weight: normal; line-height: 1.1; text-transform: uppercase; letter-spacing: normal; }.ob-hero h1 em, h2 em { color: var(--amber); font-style: normal; }
 .ob-hero-lede { max-width: 510px; color: var(--muted-cream); font-size: 16px; line-height: 1.75; }

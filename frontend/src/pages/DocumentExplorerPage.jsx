@@ -29,8 +29,8 @@ const DOC_PILL = {
 }
 
 function syncBadge(status) {
-  if (status === 'synced' || status === 'success') return 'status-badge status-synced'
-  if (status === 'error')   return 'status-badge status-error'
+  if (status === 'complete' || status === 'synced' || status === 'success') return 'status-badge status-synced'
+  if (status === 'failed' || status === 'error') return 'status-badge status-error'
   if (status === 'partial') return 'status-badge status-partial'
   return 'status-badge status-pending'
 }

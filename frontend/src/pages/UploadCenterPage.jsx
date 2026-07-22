@@ -33,8 +33,8 @@ const DOC_PILL_CLASS = {
 function statusMeta(status) {
   if (!status || status === 'pending') return { cls: 'status-pending', label: 'Queued', spin: false }
   if (status === 'processing')         return { cls: 'status-pending', label: 'Processing', spin: true }
-  if (status === 'synced' || status === 'success') return { cls: 'status-synced', label: 'Synced', spin: false }
-  if (status === 'error')              return { cls: 'status-error',   label: 'Error', spin: false }
+  if (status === 'complete' || status === 'synced' || status === 'success') return { cls: 'status-synced', label: 'Synced', spin: false }
+  if (status === 'failed' || status === 'error') return { cls: 'status-error', label: 'Error', spin: false }
   if (status === 'partial')            return { cls: 'status-partial', label: 'Partial', spin: false }
   return { cls: 'status-pending', label: 'Processing', spin: true }
 }
@@ -138,7 +138,7 @@ export default function UploadCenterPage() {
           const u = prev.map(x => x.doc_id === docId ? { ...x, sync_status: s.sync_status } : x)
           saveRecent(u); return u
         })
-        if (['synced','error','success'].includes(s.sync_status) || attempts > 20) clearInterval(pollRef.current)
+        if (['complete', 'failed', 'partial', 'synced', 'error', 'success'].includes(s.sync_status) || attempts > 20) clearInterval(pollRef.current)
       } catch { if (attempts > 6) clearInterval(pollRef.current) }
     }, 2000)
   }, [])
@@ -154,7 +154,7 @@ export default function UploadCenterPage() {
       const entry = {
         doc_id: docId, filename: file.name,
         doc_type: result?.document?.doc_type || docType || 'auto',
-        sync_status: result?.sync?.status || 'pending',
+        sync_status: result?.sync?.sync_status || 'pending',
         uploaded_at: new Date().toLocaleString(),
       }
       setRecentUploads(prev => { const u = [entry, ...prev]; saveRecent(u); return u })
@@ -174,7 +174,7 @@ export default function UploadCenterPage() {
       const entry = {
         doc_id: docId, filename: s.filename,
         doc_type: result?.document?.doc_type || 'auto',
-        sync_status: result?.sync?.status || 'pending',
+        sync_status: result?.sync?.sync_status || 'pending',
         uploaded_at: new Date().toLocaleString(),
       }
       setRecentUploads(prev => { const u = [entry, ...prev]; saveRecent(u); return u })
