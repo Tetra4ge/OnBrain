@@ -1,4 +1,4 @@
-import { ArrowRight, ArrowUpRight, BrainCircuit, Check, CircleAlert, FileText, Network, Play, ShieldCheck, Sparkles } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Check, CircleAlert, FileText, Network, Play, ShieldCheck, Sparkles } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import './HomePage.css'
 import useLandingLenis from '../hooks/useLandingLenis'
@@ -23,7 +23,6 @@ export default function HomePage() {
       <div className="ob-noise" aria-hidden="true" />
       <nav className="ob-nav wrap" aria-label="Main navigation">
         <Link className="ob-logo" to="/" aria-label="OnBrain home">
-          <span className="ob-logo-mark"><BrainCircuit size={21} strokeWidth={2.4} /></span>
           <span>ONBRAIN</span>
         </Link>
         <div className="ob-nav-links">
@@ -36,7 +35,7 @@ export default function HomePage() {
 
       <section className="ob-hero wrap">
         <div className="ob-hero-copy">
-          <div className="ob-eyebrow"><span /> Industrial intelligence, made operational</div>
+          <div className="ob-eyebrow">- Industrial intelligence, made operational</div>
           <h1>Give your<br /><em>knowledge</em><br />a working memory.</h1>
           <p className="ob-hero-lede">OnBrain turns fragmented engineering evidence into a connected, reliable intelligence layer for the teams that keep industry moving.</p>
           <div className="ob-hero-actions">
@@ -70,7 +69,12 @@ export default function HomePage() {
 
       <section className="ob-final wrap" id="security"><div className="ob-final-orb" aria-hidden="true" /><p className="ob-kicker">Designed for the work that matters</p><h2>Know more.<br /><em>Move sooner.</em></h2><p>Start connecting the evidence your operation already owns.</p><Link className="ob-button ob-button-primary" to="/app">Enter OnBrain <ArrowRight size={18} /></Link></section>
 
-      <footer className="ob-footer wrap"><div className="ob-logo"><span className="ob-logo-mark"><BrainCircuit size={18} /></span><span>ONBRAIN</span></div><span>Knowledge intelligence for industrial teams.</span><span>© 2026 ONBRAIN</span></footer>
+      <footer className="ob-footer wrap">
+        <div className="ob-logo"><span>ONBRAIN</span></div>
+        <span>Knowledge intelligence for industrial teams.</span>
+        <span>Built by <a href="https://github.com/tetra4ge" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--amber)', textDecoration: 'none' }}>Team TetraFourge</a></span>
+        <span>© 2026 ONBRAIN</span>
+      </footer>
     </main>
   )
 }
