@@ -23,36 +23,36 @@ export default function UploadWorkspace() {
   return (
     <WorkspaceShell title="Ingest documents" eyebrow="Evidence intake">
       <div className="w-full grid gap-6 lg:grid-cols-[1fr_340px]">
-        <Panel className="p-6 rounded-md border border-[#fff9e8]/10 bg-[#272311]/70">
+        <Panel className="p-4 sm:p-6 rounded-md border border-[#fff9e8]/10 bg-[#272311]/70">
           <input ref={inputRef} type="file" className="hidden" accept=".pdf,.csv,.json,.txt,.png,.jpg,.jpeg" onChange={event => setFile(event.target.files?.[0] || null)} />
           <button 
             type="button" 
             onClick={() => inputRef.current?.click()} 
-            className="flex min-h-72 w-full flex-col items-center justify-center rounded-md border border-dashed border-[#ffbe0b]/40 bg-[#ffbe0b]/[0.02] p-8 text-center transition hover:border-[#ffbe0b] hover:bg-[#ffbe0b]/[0.05]"
+            className="flex min-h-52 sm:min-h-72 w-full flex-col items-center justify-center rounded-md border border-dashed border-[#ffbe0b]/40 bg-[#ffbe0b]/[0.02] p-4 sm:p-8 text-center transition hover:border-[#ffbe0b] hover:bg-[#ffbe0b]/[0.05]"
           >
-            <span className="grid size-14 place-items-center rounded bg-[#ffbe0b]/10 text-[#ffbe0b]">
-              <FileUp size={28} />
+            <span className="grid size-12 sm:size-14 place-items-center rounded bg-[#ffbe0b]/10 text-[#ffbe0b]">
+              <FileUp size={26} />
             </span>
-            <strong className="mt-4 text-base font-semibold text-[#fff9e8]">
+            <strong className="mt-3 sm:mt-4 text-xs sm:text-base font-semibold text-[#fff9e8]">
               {file ? file.name : 'Choose an industrial source file or drag & drop'}
             </strong>
-            <p className="mt-1.5 text-xs text-[#bfb493]">
+            <p className="mt-1 sm:mt-1.5 text-[11px] sm:text-xs text-[#bfb493]">
               PDF, CSV, JSON, TXT, PNG or JPEG · up to 10 MB per file
             </p>
             {file && (
-              <span className="mt-3 inline-flex rounded bg-[#ffbe0b]/15 px-3 py-1 text-xs font-bold text-[#ffbe0b]">
+              <span className="mt-2.5 inline-flex rounded bg-[#ffbe0b]/15 px-2.5 py-1 text-[11px] font-bold text-[#ffbe0b]">
                 Selected: {(file.size / 1024 / 1024).toFixed(2)} MB
               </span>
             )}
           </button>
 
-          <div className="mt-6 grid gap-4 sm:grid-cols-[1fr_auto] items-end">
+          <div className="mt-5 sm:mt-6 grid gap-3 sm:gap-4 sm:grid-cols-[1fr_auto] items-end">
             <label className="text-xs font-medium text-[#c7bea1]">
               Document type / taxonomy
               <select 
                 value={type} 
                 onChange={event => setType(event.target.value)} 
-                className="mt-2 block w-full rounded border border-[#fff9e8]/15 bg-[#17150a] px-3 py-2.5 text-xs text-[#fff9e8] outline-none focus:border-[#ffbe0b]"
+                className="mt-1.5 block w-full rounded border border-[#fff9e8]/15 bg-[#17150a] px-3 py-2 text-xs text-[#fff9e8] outline-none focus:border-[#ffbe0b]"
               >
                 {types.map(item => (
                   <option key={item} value={item}>
@@ -64,9 +64,9 @@ export default function UploadWorkspace() {
             <button 
               onClick={upload} 
               disabled={!file || loading} 
-              className="inline-flex h-10 items-center justify-center gap-2 rounded bg-[#ffbe0b] px-6 text-xs font-bold text-[#181609] transition hover:bg-[#ffda62] disabled:cursor-not-allowed disabled:opacity-40"
+              className="inline-flex h-10 w-full sm:w-auto items-center justify-center gap-2 rounded bg-[#ffbe0b] px-6 text-xs font-bold text-[#181609] transition hover:bg-[#ffda62] disabled:cursor-not-allowed disabled:opacity-40"
             >
-              {loading ? <LoaderCircle size={16} className="animate-spin" /> : <Upload size={16} />}
+              {loading ? <LoaderCircle size={15} className="animate-spin" /> : <Upload size={15} />}
               {loading ? 'Processing Pipeline…' : 'Process File'}
             </button>
           </div>

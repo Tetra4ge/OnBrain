@@ -26,19 +26,19 @@ export default function KnowledgeWorkspace() {
     >
       <div className="w-full space-y-4">
         <Panel className="overflow-hidden rounded-md border border-[#fff9e8]/10 bg-[#272311]/70">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#fff9e8]/10 px-5 py-3.5 bg-[#1f1c0d]/60">
-            <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#fff9e8]/10 px-3.5 sm:px-5 py-3.5 bg-[#1f1c0d]/60">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
               {filters.map(item => (
                 <button 
                   key={item || 'all'} 
                   onClick={() => setFilter(item)} 
-                  className={`rounded px-3 py-1.5 text-xs font-semibold capitalize transition ${filter === item ? 'bg-[#ffbe0b] text-[#181609]' : 'bg-white/5 text-[#c7bea1] hover:bg-white/10 hover:text-white'}`}
+                  className={`rounded px-2.5 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs font-semibold capitalize transition ${filter === item ? 'bg-[#ffbe0b] text-[#181609]' : 'bg-white/5 text-[#c7bea1] hover:bg-white/10 hover:text-white'}`}
                 >
                   {item ? item.replace('_', ' ') : 'All sources'}
                 </button>
               ))}
             </div>
-            <span className="text-xs font-mono text-[#bfb493]">{documents.length} indexed files</span>
+            <span className="text-[11px] sm:text-xs font-mono text-[#bfb493]">{documents.length} indexed files</span>
           </div>
 
           {error ? (
@@ -59,7 +59,7 @@ export default function KnowledgeWorkspace() {
             />
           ) : (
             <div className="w-full overflow-x-auto">
-              <table className="w-full text-left text-xs text-[#c7bea1]">
+              <table className="w-full min-w-[640px] text-left text-xs text-[#c7bea1]">
                 <thead className="border-b border-[#fff9e8]/10 bg-[#17150a]/80 text-[10px] uppercase tracking-wider text-[#ffbe0b]">
                   <tr>
                     <th scope="col" className="px-5 py-3 font-bold">Document Source</th>

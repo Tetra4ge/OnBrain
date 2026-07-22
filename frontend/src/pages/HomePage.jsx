@@ -26,9 +26,9 @@ export default function HomePage() {
           <span>ONBRAIN</span>
         </Link>
         <div className="ob-nav-links">
-          <a href="#platform">Platform</a>
-          <a href="#workflow">Workflow</a>
-          <a href="#security">Security</a>
+          <a href="#capabilities">Capabilities</a>
+          <a href="#investigation">Investigation</a>
+          <a href="#enterprise">Enterprise</a>
         </div>
         <Link className="ob-nav-cta" to="/app">Enter workspace <ArrowUpRight size={16} /></Link>
       </nav>
@@ -40,7 +40,7 @@ export default function HomePage() {
           <p className="ob-hero-lede">OnBrain turns fragmented engineering evidence into a connected, reliable intelligence layer for the teams that keep industry moving.</p>
           <div className="ob-hero-actions">
             <Link className="ob-button ob-button-primary" to="/app">Explore the workspace <ArrowRight size={18} /></Link>
-            <a className="ob-button ob-button-quiet" href="#platform"><Play size={15} fill="currentColor" /> See how it works</a>
+            <a className="ob-button ob-button-quiet" href="#capabilities"><Play size={15} fill="currentColor" /> See how it works</a>
           </div>
           <div className="ob-proof"><span className="ob-proof-avatars"><i>AK</i><i>RM</i><i>JS</i></span><span>Built for high-context operations teams</span></div>
         </div>
@@ -58,16 +58,16 @@ export default function HomePage() {
 
       <section className="ob-trust"><div className="wrap"><span>ONE OPERATING MEMORY</span><b /> <span>FOR COMPLEX INDUSTRY</span><b /> <span>BUILT ON YOUR EVIDENCE</span><b /> <span>ONE OPERATING MEMORY</span></div></section>
 
-      <section className="ob-section wrap" id="platform">
+      <section className="ob-section wrap" id="capabilities">
         <div className="ob-section-heading"><div><p className="ob-kicker">The platform</p><h2>From scattered records<br />to <em>decisive action.</em></h2></div><p>Make your information more than accessible. Make it useful at the exact moment it changes an outcome.</p></div>
         <div className="ob-capabilities">
-          {capabilities.map(([title, body, Icon], index) => <article className="ob-capability" key={title}><span className="ob-cap-number">0{index + 1}</span><Icon className="ob-cap-icon" size={24} strokeWidth={1.8} /><h3>{title}</h3><p>{body}</p><a href="#workflow" aria-label={`Learn about ${title}`}><ArrowUpRight size={18} /></a></article>)}
+          {capabilities.map(([title, body, Icon], index) => <article className="ob-capability" key={title}><span className="ob-cap-number">0{index + 1}</span><Icon className="ob-cap-icon" size={24} strokeWidth={1.8} /><h3>{title}</h3><p>{body}</p><a href="#investigation" aria-label={`Learn about ${title}`}><ArrowUpRight size={18} /></a></article>)}
         </div>
       </section>
 
-      <section className="ob-workflow" id="workflow"><div className="wrap ob-workflow-grid"><div><p className="ob-kicker">A clear line to the answer</p><h2>Investigate in<br /><em>one motion.</em></h2><p className="ob-body-copy">Every conclusion keeps its trail. Move from a live signal to its records, relationships and reasoning without jumping between systems.</p><Link to="/app" className="ob-text-link">Open the copilot <ArrowRight size={17} /></Link></div><div className="ob-activity-panel"><div className="ob-panel-title"><span>INVESTIGATION FEED</span><span>24 JUL 2026</span></div>{activity.map(([source, detail, status]) => <div className="ob-activity" key={source}><span className={status === 'High' ? 'ob-status high' : 'ob-status'}>{status === 'High' ? <CircleAlert size={16} /> : <Check size={15} />}</span><div><b>{source}</b><p>{detail}</p></div><ArrowUpRight size={16} /></div>)}<div className="ob-panel-bottom">VIEW ALL CONNECTED EVIDENCE <ArrowRight size={15} /></div></div></div></section>
+      <section className="ob-workflow" id="investigation"><div className="wrap ob-workflow-grid"><div><p className="ob-kicker">A clear line to the answer</p><h2>Investigate in<br /><em>one motion.</em></h2><p className="ob-body-copy">Every conclusion keeps its trail. Move from a live signal to its records, relationships and reasoning without jumping between systems.</p><Link to="/app" className="ob-text-link">Open the copilot <ArrowRight size={17} /></Link></div><div className="ob-activity-panel"><div className="ob-panel-title"><span>INVESTIGATION FEED</span><span>24 JUL 2026</span></div>{activity.map(([source, detail, status]) => <div className="ob-activity" key={source}><span className={status === 'High' ? 'ob-status high' : 'ob-status'}>{status === 'High' ? <CircleAlert size={16} /> : <Check size={15} />}</span><div><b>{source}</b><p>{detail}</p></div><ArrowUpRight size={16} /></div>)}<div className="ob-panel-bottom">VIEW ALL CONNECTED EVIDENCE <ArrowRight size={15} /></div></div></div></section>
 
-      <section className="ob-final wrap" id="security"><div className="ob-final-orb" aria-hidden="true" /><p className="ob-kicker">Designed for the work that matters</p><h2>Know more.<br /><em>Move sooner.</em></h2><p>Start connecting the evidence your operation already owns.</p><Link className="ob-button ob-button-primary" to="/app">Enter OnBrain <ArrowRight size={18} /></Link></section>
+      <section className="ob-final wrap" id="enterprise"><div className="ob-final-orb" aria-hidden="true" /><p className="ob-kicker">Designed for the work that matters</p><h2>Know more.<br /><em>Move sooner.</em></h2><p>Start connecting the evidence your operation already owns.</p><Link className="ob-button ob-button-primary" to="/app">Enter OnBrain <ArrowRight size={18} /></Link></section>
 
       <footer className="ob-footer wrap">
         <div className="ob-logo"><span>ONBRAIN</span></div>

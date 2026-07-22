@@ -29,7 +29,8 @@ body { min-width: 320px; margin: 0; background: #17150a; color: #fff9e8; font-fa
 button, input, textarea, select { font: inherit; }
 button { cursor: pointer; }
 button:disabled { cursor: not-allowed; }
-:focus-visible { outline: 2px solid #ffbe0b; outline-offset: 2px; }
+input:focus, input:focus-visible, textarea:focus, textarea:focus-visible, select:focus, select:focus-visible { outline: none !important; box-shadow: none !important; }
+:focus-visible:not(input):not(textarea):not(select) { outline: 2px solid #ffbe0b; outline-offset: 2px; }
 ::selection { background: rgba(255,190,11,.28); }
 
 .wrap { width: 100%; max-width: 80rem; margin-inline: auto; padding-inline: 1.5rem; }

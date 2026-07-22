@@ -8,12 +8,14 @@ export default function useLandingLenis() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined
 
     const lenis = new Lenis({
-      lerp: 0.08,
+      duration: 2.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      wheelMultiplier: 0.85,
+      wheelMultiplier: 0.75,
       touchMultiplier: 1,
       autoRaf: false,
     })
+
     let frameId
     const raf = (time) => {
       lenis.raf(time)
@@ -21,8 +23,24 @@ export default function useLandingLenis() {
     }
 
     frameId = requestAnimationFrame(raf)
+
+    const handleAnchorClick = (event) => {
+      const link = event.target.closest('a[href^="#"]')
+      if (!link) return
+      const targetId = link.getAttribute('href')
+      if (!targetId || targetId === '#') return
+      const targetEl = document.querySelector(targetId)
+      if (targetEl) {
+        event.preventDefault()
+        lenis.scrollTo(targetEl, { duration: 2.2, offset: -60 })
+      }
+    }
+
+    document.addEventListener('click', handleAnchorClick)
+
     return () => {
       cancelAnimationFrame(frameId)
+      document.removeEventListener('click', handleAnchorClick)
       lenis.destroy()
     }
   }, [])

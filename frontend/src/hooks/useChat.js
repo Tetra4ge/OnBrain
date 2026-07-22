@@ -4,8 +4,7 @@ import { streamCopilotResponse } from '../lib/api'
 const WELCOME_MESSAGE = {
   id: 'welcome',
   role: 'assistant',
-  content:
-    "Hello! I'm the OnBrain Copilot — your AI-powered industrial knowledge assistant. I can answer questions about your equipment, surface compliance gaps, and help you understand incidents using your uploaded documents.\n\nTry asking: \"What compliance gaps exist in my documents?\" or \"When was the last inspection on our compressor?\"",
+  content: "Hello! I'm the OnBrain Copilot - your AI-powered industrial knowledge assistant. I can answer questions about your equipment, surface compliance gaps, and help you understand incidents using your uploaded documents.",
   confidence: 'high',
   confidence_score: 1.0,
   citations: [],

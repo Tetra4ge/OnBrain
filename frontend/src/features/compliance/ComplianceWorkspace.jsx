@@ -35,12 +35,12 @@ export default function ComplianceWorkspace() {
   return (
     <WorkspaceShell title="Compliance scan" eyebrow="Regulatory evidence coverage">
       <div className="w-full space-y-6">
-        <Panel className="p-6 rounded-md border border-[#fff9e8]/10 bg-[#272311]/70">
+        <Panel className="p-4 sm:p-6 rounded-md border border-[#fff9e8]/10 bg-[#272311]/70">
           <form onSubmit={submit} className="space-y-2">
             <label htmlFor="compliance-query" className="block text-xs font-semibold text-[#c7bea1]">
               Target Process, Equipment, or Regulatory Standard
             </label>
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center">
               <input 
                 type="text"
                 id="compliance-query" 
@@ -51,7 +51,7 @@ export default function ComplianceWorkspace() {
               />
               <button 
                 disabled={loading || !query.trim()} 
-                className="inline-flex h-10 items-center justify-center gap-2 rounded bg-[#ffbe0b] px-5 text-xs font-bold text-[#181609] transition hover:bg-[#ffda62] disabled:opacity-40"
+                className="inline-flex h-10 w-full sm:w-auto items-center justify-center gap-2 rounded bg-[#ffbe0b] px-5 text-xs font-bold text-[#181609] transition hover:bg-[#ffda62] disabled:opacity-40"
               >
                 <Search size={15} />
                 {loading ? 'Scanning…' : 'Run Compliance Scan'}
