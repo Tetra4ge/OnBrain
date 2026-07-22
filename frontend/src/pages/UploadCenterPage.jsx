@@ -5,6 +5,7 @@ import {
 } from 'lucide-react'
 import AppSidebar from '../components/layout/AppSidebar'
 import AppHeader from '../components/layout/AppHeader'
+import WorkspacePageHero from '../components/layout/WorkspacePageHero'
 import {
   uploadDocumentFile,
   getSampleDocuments,
@@ -201,11 +202,12 @@ export default function UploadCenterPage() {
             background: '#F7931A', opacity: 0.025, filter: 'blur(120px)', borderRadius: '50%',
           }} />
           <div style={{ maxWidth: '62rem', margin: '0 auto' }}>
-            <div className="mb-8 animate-fade-up text-center">
-              <span className="section-label">Document Ingestion</span>
-              <h1 className="font-heading text-2xl text-white mb-2">Upload Center</h1>
-              <p className="font-body text-sm text-[#94A3B8]">Upload industrial documents to populate your knowledge graph.</p>
-            </div>
+            <WorkspacePageHero
+              eyebrow="Document ingestion"
+              title={<>Turn files into <em>working evidence.</em></>}
+              description="Upload the records your team trusts. OnBrain extracts the relationships that make them useful in the moment."
+              metrics={[{ value: '05', label: 'supported formats' }, { value: '10 MB', label: 'per file' }]}
+            />
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
               <div className="flex flex-col gap-4">

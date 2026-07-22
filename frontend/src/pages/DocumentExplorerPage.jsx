@@ -6,6 +6,7 @@ import {
 } from 'lucide-react'
 import AppSidebar from '../components/layout/AppSidebar'
 import AppHeader from '../components/layout/AppHeader'
+import WorkspacePageHero from '../components/layout/WorkspacePageHero'
 import { listDocuments } from '../lib/api'
 
 const PAGE_SIZE = 20
@@ -185,11 +186,12 @@ export default function DocumentExplorerPage() {
           <div style={{ maxWidth: '72rem', margin: '0 auto' }}>
 
             {/* Heading */}
-            <div className="mb-6 animate-fade-up">
-              <span className="section-label">Knowledge Store</span>
-              <h1 className="font-heading text-2xl text-white text-center mb-2">Document Explorer</h1>
-              <p className="font-body text-sm text-[#94A3B8] text-center">Browse all ingested documents in your knowledge base.</p>
-            </div>
+            <WorkspacePageHero
+              eyebrow="Knowledge store"
+              title={<>Every source. <em>In context.</em></>}
+              description="Browse the evidence layer behind your operation, then follow each record into the relationships it creates."
+              metrics={[{ value: total.toLocaleString(), label: 'indexed documents' }, { value: '05', label: 'source classes' }]}
+            />
 
             {/* Controls bar */}
             <div className="flex items-center gap-3 mb-5 flex-wrap">

@@ -7,6 +7,7 @@ import {
 } from 'lucide-react'
 import AppSidebar from '../components/layout/AppSidebar'
 import AppHeader from '../components/layout/AppHeader'
+import WorkspacePageHero from '../components/layout/WorkspacePageHero'
 import { semanticSearch, listEquipmentTags } from '../lib/api'
 
 // ── Helpers ───────────────────────────────────────────────────
@@ -187,13 +188,17 @@ export default function ComplianceScanPage() {
           <div style={{ maxWidth: '64rem', margin: '0 auto' }}>
 
             {/* Heading */}
-            <div className="mb-8 animate-fade-up text-center">
-              <span className="section-label">Regulatory Intelligence</span>
-              <h1 className="font-heading text-2xl text-white mb-2">Compliance Scan</h1>
+            <WorkspacePageHero
+              eyebrow="Regulatory intelligence"
+              title={<>Find the gap <em>before it matters.</em></>}
+              description="Describe the process. OnBrain maps it to your regulation corpus and reveals coverage, uncertainty and evidence gaps."
+              metrics={[{ value: 'Top 20', label: 'evidence depth' }, { value: 'Live', label: 'gap analysis' }]}
+            />
+            {/*
               <p className="font-body text-sm text-[#94A3B8]">
                 Describe a process or procedure — we surface matching regulations and flag coverage gaps.
               </p>
-            </div>
+            */}
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: '1.5rem' }}>
 

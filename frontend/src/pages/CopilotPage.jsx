@@ -5,10 +5,16 @@ import ChatMessage from '../components/chat/ChatMessage'
 import ChatInput from '../components/chat/ChatInput'
 import TypingIndicator from '../components/chat/TypingIndicator'
 import { useChat } from '../hooks/useChat'
-import { Trash2, Info } from 'lucide-react'
+import WorkspacePageHero from '../components/layout/WorkspacePageHero'
+import { ArrowUpRight, Database, Info, Network, Trash2 } from 'lucide-react'
 
 // Max content width for the chat column
 const CHAT_MAX_W = '48rem'
+
+const promptStarters = [
+  ['Investigate an asset', 'Trace incidents, inspections and maintenance records around an equipment tag.', Network, 'Show me every record connected to compressor P-204'],
+  ['Surface a compliance gap', 'Find missing evidence against a process or regulatory requirement.', Database, 'What compliance gaps exist in my documents?'],
+]
 
 export default function CopilotPage() {
   const { messages, loading, sendMessage, clearChat } = useChat()
@@ -21,7 +27,7 @@ export default function CopilotPage() {
   return (
     <div className="app-shell ob-workspace-shell" style={{ display: 'flex', height: '100vh', background: 'var(--bg-void)', overflow: 'hidden' }}>
       {/* Sidebar */}
-      <AppSidebar />
+      <div className="app-sidebar"><AppSidebar /></div>
 
       {/* Main column */}
       <div className="app-main ob-workspace-main" style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, overflow: 'hidden' }}>
@@ -43,6 +49,26 @@ export default function CopilotPage() {
 
           {/* Content column — centered */}
           <div style={{ width: '100%', maxWidth: CHAT_MAX_W, margin: '0 auto' }}>
+            {messages.length <= 1 && (
+              <>
+                <WorkspacePageHero
+                  eyebrow="Your industrial copilot"
+                  title={<>Ask once. <em>Know why.</em></>}
+                  description="Turn the records around your operation into a clear, source-backed path to action."
+                  metrics={[{ value: '24', label: 'connected sources' }, { value: '94%', label: 'evidence confidence' }]}
+                />
+                <div className="ob-copilot-starters" aria-label="Suggested investigations">
+                  {promptStarters.map(([title, detail, Icon, prompt]) => (
+                    <button key={title} onClick={() => sendMessage(prompt)} className="ob-copilot-starter">
+                      <span className="ob-copilot-starter-icon"><Icon size={19} /></span>
+                      <span><b>{title}</b><small>{detail}</small></span>
+                      <ArrowUpRight size={17} />
+                    </button>
+                  ))}
+                </div>
+                <div className="ob-chat-section-label"><span /> Start an investigation</div>
+              </>
+            )}
             {/* Info banner — shown only on first load */}
             {messages.length <= 1 && (
               <div

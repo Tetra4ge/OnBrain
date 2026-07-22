@@ -318,6 +318,36 @@ body {
 .ob-workspace-shell .drop-zone:hover,
 .ob-workspace-shell .drop-zone.drag-over { border-color: #ffbe0b; background: rgba(255,190,11,.07); box-shadow: 0 0 26px rgba(255,190,11,.12); }
 
+/* Page compositions: dense enough for operations, expressive enough to orient a first-time user. */
+.ob-page-hero {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, .7fr); gap: 2rem;
+  overflow: hidden; margin: 0 0 1.35rem; padding: clamp(1.4rem, 3vw, 2.2rem);
+  border: 1px solid rgba(255,190,11,.27); border-radius: .85rem;
+  background: linear-gradient(118deg, #302b10 0%, #201d0d 66%, #191708 100%);
+  box-shadow: inset 0 1px 0 rgba(255,249,232,.06), 0 18px 38px rgba(0,0,0,.15);
+}
+.ob-page-hero::after { content: ''; position: absolute; width: 320px; height: 320px; right: -165px; top: -185px; border: 38px solid rgba(255,190,11,.1); border-radius: 50%; pointer-events: none; }
+.ob-page-hero-copy, .ob-page-hero-side { position: relative; z-index: 1; }
+.ob-page-eyebrow { display: flex; align-items: center; gap: .45rem; color: #ffbe0b; font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+.ob-page-hero h1 { max-width: 610px; margin: .7rem 0 .55rem; color: #fff9e8; font-family: var(--font-heading); font-size: clamp(2.5rem, 5vw, 4.15rem); font-weight: 800; line-height: .83; letter-spacing: -.035em; text-transform: uppercase; }
+.ob-page-hero h1 em { color: #ffbe0b; font-style: normal; }
+.ob-page-hero-copy > p:last-child { max-width: 610px; color: #c7bea1; font-size: 13px; line-height: 1.65; }
+.ob-page-hero-side { align-self: stretch; display: flex; flex-direction: column; justify-content: space-between; min-height: 115px; padding-left: 1.5rem; border-left: 1px solid rgba(255,249,232,.12); }
+.ob-page-hero-status, .ob-page-hero-action { display: flex; align-items: center; justify-content: space-between; gap: .75rem; color: #c7bea1; font-family: var(--font-mono); font-size: 9px; letter-spacing: .09em; text-transform: uppercase; }
+.ob-page-hero-status span { display: flex; align-items: center; gap: .4rem; }
+.ob-page-hero-status b { color: #ffbe0b; font-size: 9px; }.ob-page-hero-status b::before { content: ''; display: inline-block; width: 5px; height: 5px; margin-right: 5px; border-radius: 50%; background: #ffbe0b; box-shadow: 0 0 0 4px rgba(255,190,11,.12); }
+.ob-page-hero-metrics { display: grid; grid-template-columns: repeat(2, 1fr); gap: .65rem; }
+.ob-page-hero-metrics div { min-width: 0; padding: .7rem .72rem; background: rgba(12,11,4,.34); border: 1px solid rgba(255,249,232,.1); }
+.ob-page-hero-metrics b { display: block; color: #fff9e8; font-family: var(--font-heading); font-size: 22px; line-height: 1; letter-spacing: .02em; }
+.ob-page-hero-metrics span { display: block; margin-top: .3rem; color: #a99f80; font-family: var(--font-mono); font-size: 8px; letter-spacing: .08em; text-transform: uppercase; }
+.ob-copilot-starters { display: grid; grid-template-columns: repeat(2, 1fr); gap: .75rem; margin: 0 0 1.35rem; }
+.ob-copilot-starter { display: grid; grid-template-columns: 38px 1fr 18px; align-items: center; gap: .8rem; min-height: 100px; padding: 1rem; text-align: left; color: #fff9e8; background: rgba(39,35,17,.8); border: 1px solid rgba(255,218,98,.14); border-radius: .55rem; cursor: pointer; transition: transform .2s ease, border-color .2s ease, background .2s ease; }
+.ob-copilot-starter:hover { transform: translateY(-3px); background: #312d13; border-color: rgba(255,190,11,.48); }
+.ob-copilot-starter-icon { display: grid; place-items: center; width: 38px; height: 38px; color: #181609; background: #ffbe0b; border-radius: .4rem; }
+.ob-copilot-starter b { display: block; font-family: var(--font-heading); font-size: 19px; letter-spacing: .01em; }.ob-copilot-starter small { display: block; margin-top: .18rem; color: #bfb493; font-size: 10px; line-height: 1.48; }.ob-copilot-starter > svg { color: #ffbe0b; }
+.ob-chat-section-label { display: flex; align-items: center; gap: .55rem; margin: .1rem 0 .65rem; color: #a99f80; font-family: var(--font-mono); font-size: 9px; letter-spacing: .13em; text-transform: uppercase; }.ob-chat-section-label span { width: 25px; height: 1px; background: #ffbe0b; }
+@media (max-width: 760px) { .ob-page-hero { grid-template-columns: 1fr; gap: 1.2rem; }.ob-page-hero-side { gap: 1rem; min-height: 0; padding: 1rem 0 0; border-top: 1px solid rgba(255,249,232,.12); border-left: 0; }.ob-copilot-starters { grid-template-columns: 1fr; }.ob-page-hero h1 { font-size: 2.7rem; } }
+
 /* ── Phase 8: Progress Stripe ──────────────────────────────── */
 @keyframes progress-stripe {
   0%   { background-position: 0 0; }
