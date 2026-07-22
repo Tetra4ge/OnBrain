@@ -1,6 +1,6 @@
-﻿import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import {
-  ArrowUpCircle, FileText, CheckCircle2, AlertCircle, Clock,
+  ArrowUpCircle, FileText, AlertCircle,
   Layers, ChevronRight, RefreshCw, FolderOpen, Upload, Zap
 } from 'lucide-react'
 import AppSidebar from '../components/layout/AppSidebar'
@@ -36,11 +36,6 @@ function statusMeta(status) {
   if (status === 'error')              return { cls: 'status-error',   label: 'Error', spin: false }
   if (status === 'partial')            return { cls: 'status-partial', label: 'Partial', spin: false }
   return { cls: 'status-pending', label: 'Processing', spin: true }
-}
-
-function StatusDot({ status }) {
-  const sm = statusMeta(status)
-  return <span className={`status-badge ${sm.cls}`}>{sm.label}</span>
 }
 
 function fmt(n) { return typeof n === 'number' ? n.toLocaleString() : '—' }

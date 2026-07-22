@@ -75,7 +75,7 @@ def get_collection():
 
 
 # ---------------------------------------------------------------------------
-# Gemini Embedding — text-embedding-004 (current best available)
+# Gemini Embedding — fallback chain (gemini-embedding-2 → gemini-embedding-001)
 # ---------------------------------------------------------------------------
 
 def _embed_text(text: str, task_type: str = "retrieval_document") -> Optional[List[float]]:
