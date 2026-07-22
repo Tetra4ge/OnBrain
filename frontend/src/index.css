@@ -1,11 +1,19 @@
 /* ============================================================
    OnBrain Design System — Bitcoin DeFi Aesthetic
    Palette: True Void + Bitcoin Orange + Tuscan Sun + Carbon Black
-   Fonts: Merriweather (headings) · Slabo 27px (body) · JetBrains Mono (data)
+   Fonts: Doctor Glitch (headings) · Outfit (body) · JetBrains Mono (data)
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700&family=Manrope:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
+
+@font-face {
+  font-family: 'Doctor Glitch';
+  src: url('/doctor-glitch.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
 /* ── Design Tokens ─────────────────────────────────────────── */
 :root {
@@ -27,13 +35,16 @@
   --gold:             #FFDA62;   /* Soft Gold */
 
   /* Typography */
-  --font-heading: 'Barlow Condensed', Impact, sans-serif;
-  --font-body:    'Manrope', Arial, sans-serif;
-  --font-mono:    'JetBrains Mono', 'Courier New', monospace;
+  --font-heading: 'Doctor Glitch', sans-serif !important;
+  --font-body:    'Outfit', sans-serif !important;
+  --font-mono:    'JetBrains Mono', 'Courier New', monospace !important;
 }
 
 /* ── Tailwind v4 Theme Extension ───────────────────────────── */
 @theme {
+  --font-heading: 'Doctor Glitch', sans-serif;
+  --font-body: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
   --color-void:    #030304;
   --color-surface: #242423;
   --color-orange:  #F7931A;
@@ -329,7 +340,7 @@ body {
 .ob-page-hero::after { content: ''; position: absolute; width: 320px; height: 320px; right: -165px; top: -185px; border: 38px solid rgba(255,190,11,.1); border-radius: 50%; pointer-events: none; }
 .ob-page-hero-copy, .ob-page-hero-side { position: relative; z-index: 1; }
 .ob-page-eyebrow { display: flex; align-items: center; gap: .45rem; color: #ffbe0b; font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
-.ob-page-hero h1 { max-width: 610px; margin: .7rem 0 .55rem; color: #fff9e8; font-family: var(--font-heading); font-size: clamp(2.5rem, 5vw, 4.15rem); font-weight: 800; line-height: .83; letter-spacing: -.035em; text-transform: uppercase; }
+.ob-page-hero h1 { max-width: 610px; margin: .7rem 0 .55rem; color: #fff9e8; font-family: var(--font-heading); font-size: clamp(2rem, 4vw, 3.5rem); font-weight: normal; line-height: 1.1; letter-spacing: normal; text-transform: uppercase; }
 .ob-page-hero h1 em { color: #ffbe0b; font-style: normal; }
 .ob-page-hero-copy > p:last-child { max-width: 610px; color: #c7bea1; font-size: 13px; line-height: 1.65; }
 .ob-page-hero-side { align-self: stretch; display: flex; flex-direction: column; justify-content: space-between; min-height: 115px; padding-left: 1.5rem; border-left: 1px solid rgba(255,249,232,.12); }
