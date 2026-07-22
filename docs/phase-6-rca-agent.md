@@ -44,7 +44,7 @@ onbrain/backend/app/
 
 3. **Build the endpoint** (`api/routes/rca.py`)
    - `POST /api/rca/analyze` — takes `{equipment_tag, failure_description}`, runs the four-step chain, returns the full structured output (pattern, hypotheses, evidence, recommendation).
-   - `GET /api/rca/reports` — minimal storage: save each RCA result to MongoDB with a timestamp and equipment tag, retrievable by tag. No need for a separate dedicated RCA store.
+   - `GET /api/rca/reports` — save each RCA result to Firestore with a timestamp and equipment tag, retrievable by tag.
 
 ## Manual Verification Checklist
 

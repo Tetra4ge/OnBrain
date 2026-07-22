@@ -1,10 +1,15 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import model_validator
+from pathlib import Path
 from typing import Optional
+
+
+BACKEND_DIR = Path(__file__).resolve().parents[2]
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=BACKEND_DIR / ".env",
         env_file_encoding="utf-8",
         extra="ignore"
     )
@@ -14,7 +19,6 @@ class Settings(BaseSettings):
     PORT: int = 8000
     HOST: str = "0.0.0.0"
 
-    MONGO_URI: str = "mongodb://root:rootpassword@mongo:27017/onbrain?authSource=admin"
     NEO4J_URI: str = "bolt://neo4j:7687"
     NEO4J_USER: str = "neo4j"
     NEO4J_PASSWORD: str = "strongpassword"
@@ -32,14 +36,20 @@ class Settings(BaseSettings):
 
     FIREBASE_PROJECT_ID: Optional[str] = None
     FIREBASE_SERVICE_ACCOUNT_PATH: Optional[str] = None
+    FIREBASE_SERVICE_ACCOUNT_JSON: Optional[str] = None
+    FIRESTORE_DOCUMENTS_COLLECTION: str = "documents"
 
     @model_validator(mode="after")
     def validate_production_credentials(self) -> "Settings":
         if self.ENVIRONMENT.lower() not in ["development", "dev", "local", "test"]:
             if "password123" in self.NEO4J_PASSWORD or not self.NEO4J_PASSWORD:
                 raise ValueError("NEO4J_PASSWORD must be configured with a secure non-default password in production.")
-            if "@" not in self.MONGO_URI:
-                raise ValueError("MONGO_URI must include authentication credentials in production.")
+            if not (
+                self.FIREBASE_SERVICE_ACCOUNT_PATH
+                or self.FIREBASE_SERVICE_ACCOUNT_JSON
+                or self.FIREBASE_PROJECT_ID
+            ):
+                raise ValueError("Firebase credentials must be configured in production for Firestore.")
         return self
 
 settings = Settings()

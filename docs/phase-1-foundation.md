@@ -6,7 +6,7 @@
 
 ## Objective
 
-A working repo skeleton where every team member can pull, run `docker-compose up`, and get all five backing services (API, frontend, MongoDB, Neo4j, ChromaDB) healthy. No feature code yet — this phase is pure scaffolding, and it is the phase every other phase depends on, so it must not be rushed or skipped.
+A working repo skeleton where every team member can pull, run `docker-compose up`, and get the local services (API, frontend, Neo4j, ChromaDB) healthy with Firestore configured in Firebase. No feature code yet — this phase is pure scaffolding, and it is the phase every other phase depends on, so it must not be rushed or skipped.
 
 ## Features Covered
 
@@ -75,8 +75,8 @@ onbrain/
 2. **Scaffold the backend**
    - Create the `backend/app/` structure exactly as shown above — every subfolder gets an `__init__.py` even if empty, so imports work later.
    - `backend/app/main.py`: a minimal FastAPI app with one route, `GET /health`, returning `{"status": "ok"}`.
-   - `backend/app/core/config.py`: use `pydantic-settings` to load env vars (`MONGO_URI`, `NEO4J_URI`, `NEO4J_USER`, `NEO4J_PASSWORD`, `CHROMA_HOST`, `GROQ_API_KEY`, `GEMINI_API_KEY`, `FIREBASE_PROJECT_ID`). Verify current `pydantic-settings` import syntax against its docs before writing this — the import path has changed across pydantic versions.
-   - `backend/requirements.txt`: pin `fastapi`, `uvicorn`, `pydantic-settings`, `python-dotenv`, plus placeholders for `pymongo`, `neo4j`, `chromadb`, `google-generativeai`, `groq` (installed now, used starting Phase 3–5).
+   - `backend/app/core/config.py`: use `pydantic-settings` to load env vars (`NEO4J_URI`, `NEO4J_USER`, `NEO4J_PASSWORD`, `CHROMA_HOST`, `GROQ_API_KEY`, `GEMINI_API_KEY`, `FIREBASE_PROJECT_ID`, `FIREBASE_SERVICE_ACCOUNT_PATH`).
+   - `backend/requirements.txt`: pin `fastapi`, `uvicorn`, `pydantic-settings`, `python-dotenv`, `firebase-admin`, `neo4j`, `chromadb`, `google-generativeai`, and `groq`.
    - `backend/Dockerfile`: standard `python:3.11-slim` base, install requirements, run via `uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload` for dev.
 
 3. **Scaffold the frontend**
@@ -85,9 +85,9 @@ onbrain/
    - `frontend/Dockerfile`: Node base image, install deps, run dev server on `0.0.0.0` so it's reachable from outside the container.
 
 4. **Write `docker-compose.yml`** with five services:
-   - `api` — builds `./backend`, exposes `8000:8000`, mounts source for hot reload, depends on `mongo`, `neo4j`, `chroma`.
+   - `api` — builds `./backend`, exposes `8000:8000`, mounts source for hot reload, depends on `neo4j` and `chroma`.
    - `frontend` — builds `./frontend`, exposes `5173:5173`.
-   - `mongo` — official `mongo` image, exposes `27017`, named volume for data persistence.
+   - Firestore — external Firebase service configured through backend credentials; it does not run as a Compose container.
    - `neo4j` — official `neo4j` image, exposes `7474` (browser) and `7687` (bolt), set `NEO4J_AUTH` via env, named volume.
    - `chroma` — official `chromadb/chroma` image, exposes `8001:8000` (avoid clashing with the API's 8000).
    - Verify current official image names and exposed ports for Neo4j and ChromaDB against Docker Hub before finalizing — these occasionally change between major versions.
@@ -111,7 +111,7 @@ Do these by hand, on a real browser/terminal, before marking this phase ✅:
 - [ ] `curl localhost:8000/health` returns `{"status": "ok"}` with a 200 status code.
 - [ ] Open `http://localhost:7474` in a browser — the Neo4j Browser login page loads.
 - [ ] Log into Neo4j Browser with the credentials from `.env` and confirm it connects (empty database is fine at this stage).
-- [ ] From a terminal, run `mongosh "<your MONGO_URI>"` and confirm it connects without error.
+- [ ] Use the Firebase console or a Firestore SDK smoke test to confirm the configured project accepts a document write.
 - [ ] Open `http://localhost:5173` — the default Vite/React starter page loads with Tailwind applied (test by adding one Tailwind class to the starter component and confirming the style shows).
 - [ ] A second team member, on a different machine, clones the repo fresh, copies `.env.example` to `.env`, fills in their own keys, and successfully runs `docker-compose up` with no undocumented manual steps. This catches "works on my machine" problems before they cost you hours later.
 

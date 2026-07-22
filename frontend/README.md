@@ -24,7 +24,7 @@ Configure backend API target in `.env`:
 VITE_API_URL=http://localhost:8000
 ```
 
-For Firebase Authentication, keep the Firebase `VITE_FIREBASE_*` values in the single repository-root `.env` file. Vite is configured to load that root file, and `src/lib/firebase.js` exports `auth` and `googleProvider` for the sign-in flow.
+For Firebase Authentication, set the `VITE_FIREBASE_*` values in `frontend/.env` (copy `frontend/.env.example`). Vite loads this directory's file, and `src/lib/firebase.js` exports `auth` and `googleProvider` for the sign-in flow.
 
 ### Vercel deployment
 

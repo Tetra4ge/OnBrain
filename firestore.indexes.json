@@ -1,0 +1,21 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "documents",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "doc_type", "order": "ASCENDING" },
+        { "fieldPath": "upload_date", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "rca_reports",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "equipment_tag", "order": "ASCENDING" },
+        { "fieldPath": "timestamp", "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

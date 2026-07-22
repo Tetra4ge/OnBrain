@@ -19,7 +19,7 @@ Industrial plants run on 7–12 disconnected document systems (P&IDs, work order
 |---|---|---|---|
 | P&ID / YOLOv8 symbol detection | Full pipeline, pretrained + optional fine-tune, mAP benchmarking | **Optional stretch task**, only attempted in Phase 3 if the team is ahead of schedule. If skipped, P&IDs are still ingestable as images via OCR + manual tagging. | Training/validating a CV model reliably in a few hours is high-risk for a live demo. |
 | Firebase Auth | Email/password + Google SSO + full role-based access control middleware | Email/password only, single role flag (`engineer` / `technician`) stored on the user record, no SSO | RBAC and SSO add real hours for something judges rarely test deeply. |
-| Three-store sync (Mongo + Neo4j + Chroma) | Full atomic transaction logic with a retry queue | Sequential write with a per-document `status` field (`pending` / `partial` / `complete`) and logged errors — not a true distributed transaction | A true atomic multi-DB transaction is a multi-day problem on its own; a status field gives you 90% of the visibility for a fraction of the effort. |
+| Three-store sync (Firestore + Neo4j + Chroma) | Full atomic transaction logic with a retry queue | Sequential write with a per-document `status` field (`pending` / `partial` / `complete`) and logged errors — not a true distributed transaction | A true atomic multi-DB transaction is a multi-day problem on its own; a status field gives you 90% of the visibility for a fraction of the effort. |
 | Equipment Profile (dedicated page) | Separate page from Graph Explorer | Folded into Graph Explorer as a node-click detail panel | One less page to build and wire; same information, one UI. |
 | RCA agent's "past RCA reports" source | Own store + retrieval path | Cut for 48 hours — RCA uses failure history, OEM specs, and inspection logs only | Reduces the RCA agent from 4 evidence sources to 3 without weakening the demo. |
 
@@ -51,7 +51,7 @@ Sources → Ingestion Layer → Knowledge Layer → Agent Layer → Application 
 |---|---|---|
 | Neo4j (graph) | Equipment → WorkOrder → Failure → Procedure → Regulation | Core |
 | ChromaDB (vector) | Chunk embeddings for semantic search | Core |
-| MongoDB (metadata) | Raw document metadata, cross-refs, sync status | Core |
+| Firestore (metadata) | Raw document metadata, cross-refs, sync status | Core |
 | Sync logic | Sequential write + status field (simplified from full atomic transaction) | Core, simplified |
 
 ### Layer 3 — Agents
@@ -69,7 +69,7 @@ Sources → Ingestion Layer → Knowledge Layer → Agent Layer → Application 
 | Mobile-responsive layout | Same backend, lightweight chat-first UI | Core |
 | Firebase Auth (simplified) | Email/password login, single role flag | Core |
 
-A FastAPI backend connects all layers. Docker Compose runs all services (`api`, `frontend`, `mongo`, `neo4j`, `chroma`) as one stack for demo reliability — no external managed-service dependency during judging.
+A FastAPI backend connects all layers. Docker Compose runs the local services (`api`, `frontend`, `neo4j`, `chroma`); Firestore is provided by the configured Firebase project.
 
 ---
 
@@ -81,7 +81,7 @@ A FastAPI backend connects all layers. Docker Compose runs all services (`api`, 
 | Backend | FastAPI | |
 | Vector database | ChromaDB (self-hosted, Docker) | |
 | Graph database | Neo4j (local Docker, not AuraDB — avoids external quota risk on demo day) | |
-| Document metadata | MongoDB (local Docker) | |
+| Document metadata | Firestore | |
 | LLM — reasoning / synthesis | Gemini | Copilot answers, RCA reasoning |
 | LLM — bulk extraction | Groq (Llama) | Entity extraction across documents |
 | OCR | Tesseract (primary), PaddleOCR (fallback only if time allows) | |
@@ -130,7 +130,7 @@ A FastAPI backend connects all layers. Docker Compose runs all services (`api`, 
 | [Phase 1 — Foundation](./phases/phase-1-foundation.md) | 0–3 | Repo, Docker Compose, environment |
 | [Phase 2 — Data & Schema](./phases/phase-2-data-schema.md) | 3–5 | Sample documents, locked schemas |
 | [Phase 3 — Ingestion](./phases/phase-3-ingestion.md) | 5–12 | OCR, entity extraction, normalizer |
-| [Phase 4 — Knowledge Layer](./phases/phase-4-knowledge.md) | 12–20 | Neo4j, ChromaDB, MongoDB sync |
+| [Phase 4 — Knowledge Layer](./phases/phase-4-knowledge.md) | 12–20 | Neo4j, ChromaDB, Firestore sync |
 | [Phase 5 — Copilot Agent](./phases/phase-5-copilot-agent.md) | 20–26 | RAG Q&A with citations |
 | [Phase 6 — RCA Agent](./phases/phase-6-rca-agent.md) | 26–30 | Root-cause reasoning |
 | [Phase 7 — Frontend Core](./phases/phase-7-frontend-core.md) | 16–30 (parallel) | Auth, upload, chat |

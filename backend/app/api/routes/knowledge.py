@@ -11,7 +11,7 @@ from pydantic import BaseModel
 
 from app.knowledge.chroma_client import chroma_client
 from app.knowledge.neo4j_client import neo4j_client
-from app.knowledge.mongo_client import mongo_client
+from app.knowledge.firestore_client import firestore_client
 
 logger = logging.getLogger(__name__)
 
@@ -115,12 +115,12 @@ async def list_documents(
     skip:     int           = Query(0, ge=0),
 ) -> Dict[str, Any]:
     """
-    Lists all documents stored in MongoDB metadata store.
+    Lists all documents stored in the Firestore metadata store.
     Supports optional doc_type filtering and pagination.
     """
     try:
-        docs  = mongo_client.list_documents(doc_type=doc_type, limit=limit, skip=skip)
-        total = mongo_client.get_document_count(doc_type=doc_type)
+        docs  = firestore_client.list_documents(doc_type=doc_type, limit=limit, skip=skip)
+        total = firestore_client.get_document_count(doc_type=doc_type)
     except Exception as e:
         logger.error(f"Document list failed: {e}")
         raise HTTPException(status_code=500, detail=f"Database query failed: {str(e)}")
@@ -143,7 +143,7 @@ async def get_document_status(doc_id: str) -> Dict[str, Any]:
     Polled by the frontend Upload Center after upload to show live progress.
     """
     try:
-        doc = mongo_client.get_document(doc_id)
+        doc = firestore_client.get_document(doc_id)
     except Exception as e:
         logger.error(f"Status check failed for doc_id={doc_id}: {e}")
         raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")

@@ -50,6 +50,7 @@ dist-ssr/
 !package-lock.json
 !tsconfig.json
 !jsconfig.json
+!firestore.indexes.json
 !vercel.json
 !*/vercel.json
 !vite.config.js

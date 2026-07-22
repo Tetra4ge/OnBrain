@@ -6,7 +6,7 @@
 
 ## Objective
 
-Take the normalized output from Phase 3 and populate all three stores — Neo4j (graph), ChromaDB (vectors), MongoDB (metadata) — with a simplified but honest sync mechanism. By the end of this phase, the system has a real, queryable knowledge base, not just cleaned text sitting in memory.
+Take the normalized output from Phase 3 and populate all three stores — Neo4j (graph), ChromaDB (vectors), Firestore (metadata) — with a simplified but honest sync mechanism. By the end of this phase, the system has a real, queryable knowledge base, not just cleaned text sitting in memory.
 
 ## Features Covered
 
@@ -14,7 +14,7 @@ Take the normalized output from Phase 3 and populate all three stores — Neo4j 
 |---|---|
 | Neo4j graph population + dedup | Core |
 | ChromaDB chunking + embedding | Core |
-| MongoDB metadata storage | Core |
+| Firestore metadata storage | Core |
 | Simplified sync (status field, not full atomic transaction) | Core, simplified — see architecture notes |
 | Search + graph query endpoints | Core |
 
@@ -26,7 +26,7 @@ onbrain/backend/app/
 │   ├── __init__.py
 │   ├── neo4j_client.py       # connection pooling, node/relationship writes, dedup logic
 │   ├── chroma_client.py       # chunking, embedding, upsert, semantic search
-│   ├── mongo_client.py        # metadata CRUD, sync status updates
+│   ├── firestore_client.py    # metadata CRUD, sync status updates
 │   └── sync.py                 # orchestrates writes across all three stores per document
 ├── api/routes/
 │   └── knowledge.py            # POST /api/search, GET /api/graph/equipment/{tag}
@@ -48,13 +48,13 @@ onbrain/backend/app/
    - Upsert each chunk with the metadata fields locked in Phase 2 (`doc_id`, `doc_type`, `chunk_index`, `page_number`, `source_filename`).
    - Write a `semantic_search(query, top_k)` function returning chunks with relevance scores.
 
-3. **MongoDB client** (`mongo_client.py`)
+3. **Firestore client** (`firestore_client.py`)
    - Implement the metadata schema from Phase 2. Create an index on `doc_id` and `sync_status`.
    - Write `create_document_record()`, `update_sync_status()`, `append_error()`.
 
 4. **Sync orchestration** (`sync.py`) — this replaces the original full atomic-transaction design with a simpler, honest approach:
-   - For each normalized document from Phase 3: write to Neo4j → on success, write to ChromaDB → on success, write to MongoDB with `sync_status: "complete"` and both stores' generated IDs cross-referenced.
-   - If any step fails, catch the error, log it into the MongoDB record's `error_log`, set `sync_status: "partial"` or `"failed"` accordingly, and continue rather than crashing the whole ingestion call.
+   - For each normalized document from Phase 3: create a pending Firestore record, write to Neo4j and ChromaDB, then set `sync_status: "complete"` and cross-reference the generated IDs.
+   - If any step fails, catch the error, log it into the Firestore record's `error_log`, set `sync_status: "partial"` or `"failed"` accordingly, and continue rather than crashing the whole ingestion call.
    - This is not a true distributed transaction — say so plainly if asked. The status field gives visibility into exactly what happened per document, which is what actually matters for a demo and for debugging under time pressure.
 
 5. **Query endpoints** (`api/routes/knowledge.py`)
@@ -68,7 +68,7 @@ onbrain/backend/app/
 - [ ] Re-ingest the same document a second time and confirm the equipment node count in Neo4j does not double — dedup is working.
 - [ ] Run `POST /api/search` with a paraphrased question (wording different from the source document) and confirm it returns the correct chunk — this validates semantic search, not just keyword matching.
 - [ ] Run `GET /api/graph/equipment/{tag}` for a tag you know exists and manually confirm the returned work orders/failures match what's actually in the source documents.
-- [ ] Check the MongoDB `documents` collection — every ingested file has a record, and `sync_status` is `"complete"` for documents that should have succeeded. Deliberately break one write (e.g. temporarily stop the Neo4j container) and confirm the sync logic correctly logs `"failed"` rather than crashing silently.
+- [ ] Check the Firestore `documents` collection — every ingested file has a record, and `sync_status` is `"complete"` for documents that should have succeeded. Deliberately break one write (e.g. temporarily stop Neo4j) and confirm the sync logic correctly logs `"failed"` rather than crashing silently.
 
 ## Dependencies
 

@@ -14,7 +14,7 @@ Lock the demo document set and the entity/relationship schema before any ingesti
 |---|---|
 | Real demo documents (Vision Pavers / Index Industries) | Core |
 | Supplementary public documents | Core |
-| MongoDB metadata schema | Core |
+| Firestore metadata schema | Core |
 | Neo4j node/relationship schema | Core |
 | ChromaDB collection schema | Core |
 
@@ -60,7 +60,7 @@ onbrain/
 
 4. **Write the Pydantic schema file** at `backend/app/models/schemas.py` — one class per entity type above, matching field names exactly. This file is the single source of truth every later phase imports from; do not redefine these fields elsewhere.
 
-5. **Design the MongoDB metadata document shape** (used in Phase 4). One document per uploaded file:
+5. **Design the Firestore metadata document shape** (used in Phase 4). One document per uploaded file:
    ```json
    {
      "_id": "doc_uuid",

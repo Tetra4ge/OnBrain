@@ -15,7 +15,7 @@ Active verification gates covering Foundation, Data Schemas, Document Ingestion 
 
 2. **Knowledge Extraction & Graph Normalization**:
    - Ingestion extracts entities (Equipment tags, Failures, Work Orders, Procedures, Personnel, Regulations) and P&ID symbols.
-   - Entities populate **Neo4j** (knowledge graph relationships), **ChromaDB** (500-char vector embeddings), and **MongoDB** (document metadata).
+   - Entities populate **Neo4j** (knowledge graph relationships), **ChromaDB** (500-char vector embeddings), and **Firestore** (document metadata).
    - Verify extraction confidence scoring (`confidence_avg`).
 
 ---
@@ -38,7 +38,7 @@ Gates for planned downstream agentic and interface components.
 
 ### Active Infrastructure (Phases 1–4)
 - [x] `FastAPI Health Check`: `GET http://localhost:8000/health` returns `{"status": "ok"}` with 200 status code.
-- [x] `MongoDB Connection`: Confirm connection to `MONGO_URI` and `documents` metadata store is operational.
+- [x] `Firestore Connection`: Confirm Firebase Admin credentials and the `documents` metadata collection are operational.
 - [x] `Neo4j Graph Connection`: Connect to `http://localhost:7474`, verify credentials, and query entity nodes.
 - [x] `ChromaDB Vector Store`: Confirm `documents` collection is reachable on configured host/port.
 

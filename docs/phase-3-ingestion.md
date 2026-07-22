@@ -54,7 +54,7 @@ onbrain/backend/app/
 
 4. **Build the normalizer** (`normalizer.py`)
    - Combine OCR output + extracted entities into one unified JSON object per document: `{doc_id, doc_type, raw_text, entities: [...], relationships: [...], confidence_avg}`.
-   - This unified object is exactly what Phase 4 consumes — do not let its shape drift from what's documented in Phase 2's Mongo/Neo4j schema notes.
+   - This unified object is exactly what Phase 4 consumes — do not let its shape drift from the Firestore/Neo4j schema notes in Phase 2.
 
 5. **Build the upload endpoint** (`api/routes/documents.py`)
    - `POST /api/documents/upload` — accepts a file, runs format detection → OCR (if needed) → extraction → normalizer, returns a `doc_id` and job status immediately (don't block the HTTP response on the full pipeline if it's slow; return a `doc_id` and let the client poll, or just run it synchronously if the pipeline is fast enough in testing — decide based on actual measured latency, not a guess).

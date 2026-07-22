@@ -12,7 +12,7 @@ def normalize_document(
 ) -> Dict[str, Any]:
     """
     Consolidates raw text, extracted entities, graph edges, and metadata into a unified
-    NormalizedDocument payload ready for MongoDB, Neo4j, and ChromaDB ingestion.
+    NormalizedDocument payload ready for Firestore, Neo4j, and ChromaDB ingestion.
     """
     if not doc_id:
         doc_id = f"doc_{uuid.uuid4().hex[:12]}"
