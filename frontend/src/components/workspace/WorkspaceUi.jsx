@@ -1,5 +1,5 @@
 export function Panel({ children, className = '' }) {
-  return <section className={`rounded-xl border border-[#fff9e8]/10 bg-[#272311]/75 shadow-[0_12px_32px_rgba(0,0,0,0.16)] ${className}`}>{children}</section>
+  return <section className={`rounded-md border border-[#fff9e8]/10 bg-[#272311]/75 shadow-[0_8px_24px_rgba(0,0,0,0.16)] ${className}`}>{children}</section>
 }
 
 export function StatusBadge({ status }) {
@@ -11,7 +11,7 @@ export function StatusBadge({ status }) {
       : value === 'partial'
         ? 'border-amber-200/20 bg-amber-200/10 text-amber-100'
         : 'border-[#ffbe0b]/25 bg-[#ffbe0b]/10 text-[#ffda62]'
-  return <span className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.1em] ${tones}`}>{value}</span>
+  return <span className={`inline-flex rounded border px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.1em] ${tones}`}>{value}</span>
 }
 
 export function EmptyState({ title, body, action }) {
