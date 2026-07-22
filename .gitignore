@@ -50,6 +50,8 @@ dist-ssr/
 !package-lock.json
 !tsconfig.json
 !jsconfig.json
+!vercel.json
+!*/vercel.json
 !vite.config.js
 !tailwind.config.js
 
