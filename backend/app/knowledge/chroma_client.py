@@ -75,12 +75,12 @@ def get_collection():
 
 
 # ---------------------------------------------------------------------------
-# Gemini Embedding — text-embedding-004 (current best available)
+# Gemini Embedding — fallback chain (gemini-embedding-2 → gemini-embedding-001)
 # ---------------------------------------------------------------------------
 
 def _embed_text(text: str, task_type: str = "retrieval_document") -> Optional[List[float]]:
     """
-    Generate an embedding vector via Gemini text-embedding-004.
+    Generate an embedding vector via Gemini.
     task_type: 'retrieval_document' for storage, 'retrieval_query' for search queries.
     Returns None on failure (chunk will be skipped).
     """
@@ -89,14 +89,29 @@ def _embed_text(text: str, task_type: str = "retrieval_document") -> Optional[Li
         return None
     try:
         genai.configure(api_key=settings.GEMINI_API_KEY)
-        result = genai.embed_content(
-            model="models/text-embedding-004",
-            content=text,
-            task_type=task_type,
-        )
-        return result["embedding"]
+        
+        # Try gemini-embedding-2 first
+        try:
+            result = genai.embed_content(
+                model="models/gemini-embedding-2",
+                content=text,
+                task_type=task_type,
+            )
+            return result["embedding"]
+        except Exception as e1:
+            logger.warning(f"Embedding with models/gemini-embedding-2 failed: {e1}. Trying models/gemini-embedding-001...")
+            try:
+                result = genai.embed_content(
+                    model="models/gemini-embedding-001",
+                    content=text,
+                    task_type=task_type,
+                )
+                return result["embedding"]
+            except Exception as e2:
+                logger.warning(f"Embedding with models/gemini-embedding-001 failed: {e2}.")
+                return None
     except Exception as e:
-        logger.error(f"Gemini embedding failed: {e}")
+        logger.error(f"All Gemini embedding attempts failed: {e}")
         return None
 
 
