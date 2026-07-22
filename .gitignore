@@ -47,6 +47,7 @@ dist-ssr/
 !.env.example
 *.json
 !package.json
+!package-lock.json
 !tsconfig.json
 !jsconfig.json
 !vite.config.js

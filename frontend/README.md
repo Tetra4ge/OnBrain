@@ -24,6 +24,12 @@ Configure backend API target in `.env`:
 VITE_API_URL=http://localhost:8000
 ```
 
+For Firebase Authentication, keep the Firebase `VITE_FIREBASE_*` values in the single repository-root `.env` file. Vite is configured to load that root file, and `src/lib/firebase.js` exports `auth` and `googleProvider` for the sign-in flow.
+
+### Vercel deployment
+
+For [onbrain.vercel.app](https://onbrain.vercel.app/), add the same `VITE_FIREBASE_*` values in the Vercel project environment settings (Production and Preview as appropriate). In Firebase Console, add `onbrain.vercel.app` under Authentication → Settings → Authorized domains before enabling OAuth-based sign-in.
+
 ### Containerized Deployment
 
 Run via Docker Compose from the root workspace directory:
