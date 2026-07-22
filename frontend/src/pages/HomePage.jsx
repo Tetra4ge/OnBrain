@@ -2,6 +2,7 @@ import { ArrowRight, ArrowUpRight, Check, CircleAlert, FileText, Network, Play, 
 import { Link } from 'react-router-dom'
 import './HomePage.css'
 import useLandingLenis from '../hooks/useLandingLenis'
+import { useAuth } from '../context/AuthContext'
 
 const capabilities = [
   ['Unify the evidence', 'Bring manuals, work orders, inspection reports and drawings into one searchable operating memory.', FileText],
@@ -17,6 +18,8 @@ const activity = [
 
 export default function HomePage() {
   useLandingLenis()
+  const { user } = useAuth()
+  const workspacePath = user ? '/app' : '/login'
 
   return (
     <main className="ob-home">
@@ -30,7 +33,7 @@ export default function HomePage() {
           <a href="#investigation">Investigation</a>
           <a href="#enterprise">Enterprise</a>
         </div>
-        <Link className="ob-nav-cta" to="/app">Enter workspace <ArrowUpRight size={16} /></Link>
+        <Link className="ob-nav-cta" to={workspacePath}>{user ? 'Enter workspace' : 'Sign in'} <ArrowUpRight size={16} /></Link>
       </nav>
 
       <section className="ob-hero wrap">
@@ -39,7 +42,7 @@ export default function HomePage() {
           <h1>Give your<br /><em>knowledge</em><br />a working memory.</h1>
           <p className="ob-hero-lede">OnBrain turns fragmented engineering evidence into a connected, reliable intelligence layer for the teams that keep industry moving.</p>
           <div className="ob-hero-actions">
-            <Link className="ob-button ob-button-primary" to="/app">Explore the workspace <ArrowRight size={18} /></Link>
+            <Link className="ob-button ob-button-primary" to={workspacePath}>{user ? 'Explore the workspace' : 'Sign in with Google'} <ArrowRight size={18} /></Link>
             <a className="ob-button ob-button-quiet" href="#capabilities"><Play size={15} fill="currentColor" /> See how it works</a>
           </div>
           <div className="ob-proof"><span className="ob-proof-avatars"><i>AK</i><i>RM</i><i>JS</i></span><span>Built for high-context operations teams</span></div>
@@ -65,9 +68,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="ob-workflow" id="investigation"><div className="wrap ob-workflow-grid"><div><p className="ob-kicker">A clear line to the answer</p><h2>Investigate in<br /><em>one motion.</em></h2><p className="ob-body-copy">Every conclusion keeps its trail. Move from a live signal to its records, relationships and reasoning without jumping between systems.</p><Link to="/app" className="ob-text-link">Open the copilot <ArrowRight size={17} /></Link></div><div className="ob-activity-panel"><div className="ob-panel-title"><span>INVESTIGATION FEED</span><span>24 JUL 2026</span></div>{activity.map(([source, detail, status]) => <div className="ob-activity" key={source}><span className={status === 'High' ? 'ob-status high' : 'ob-status'}>{status === 'High' ? <CircleAlert size={16} /> : <Check size={15} />}</span><div><b>{source}</b><p>{detail}</p></div><ArrowUpRight size={16} /></div>)}<div className="ob-panel-bottom">VIEW ALL CONNECTED EVIDENCE <ArrowRight size={15} /></div></div></div></section>
+      <section className="ob-workflow" id="investigation"><div className="wrap ob-workflow-grid"><div><p className="ob-kicker">A clear line to the answer</p><h2>Investigate in<br /><em>one motion.</em></h2><p className="ob-body-copy">Every conclusion keeps its trail. Move from a live signal to its records, relationships and reasoning without jumping between systems.</p><Link to={workspacePath} className="ob-text-link">Open the copilot <ArrowRight size={17} /></Link></div><div className="ob-activity-panel"><div className="ob-panel-title"><span>INVESTIGATION FEED</span><span>24 JUL 2026</span></div>{activity.map(([source, detail, status]) => <div className="ob-activity" key={source}><span className={status === 'High' ? 'ob-status high' : 'ob-status'}>{status === 'High' ? <CircleAlert size={16} /> : <Check size={15} />}</span><div><b>{source}</b><p>{detail}</p></div><ArrowUpRight size={16} /></div>)}<div className="ob-panel-bottom">VIEW ALL CONNECTED EVIDENCE <ArrowRight size={15} /></div></div></div></section>
 
-      <section className="ob-final wrap" id="enterprise"><div className="ob-final-orb" aria-hidden="true" /><p className="ob-kicker">Designed for the work that matters</p><h2>Know more.<br /><em>Move sooner.</em></h2><p>Start connecting the evidence your operation already owns.</p><Link className="ob-button ob-button-primary" to="/app">Enter OnBrain <ArrowRight size={18} /></Link></section>
+      <section className="ob-final wrap" id="enterprise"><div className="ob-final-orb" aria-hidden="true" /><p className="ob-kicker">Designed for the work that matters</p><h2>Know more.<br /><em>Move sooner.</em></h2><p>Start connecting the evidence your operation already owns.</p><Link className="ob-button ob-button-primary" to={workspacePath}>{user ? 'Enter OnBrain' : 'Sign in with Google'} <ArrowRight size={18} /></Link></section>
 
       <footer className="ob-footer wrap">
         <div className="ob-logo"><span>ONBRAIN</span></div>
