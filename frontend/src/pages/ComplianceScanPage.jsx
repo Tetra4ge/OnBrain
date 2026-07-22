@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   ShieldCheck, ShieldAlert, Search, ChevronDown, ChevronUp,
@@ -13,6 +13,13 @@ import { semanticSearch, listEquipmentTags } from '../lib/api'
 const LS_KEY = 'onbrain_compliance_scans'
 const loadHistory = () => { try { return JSON.parse(localStorage.getItem(LS_KEY) ?? '[]') } catch { return [] } }
 const saveHistory = items => localStorage.setItem(LS_KEY, JSON.stringify(items.slice(0, 5)))
+
+function relevanceScore(result) {
+  if (typeof result?.relevance_score === 'number') return result.relevance_score
+  if (typeof result?.score === 'number') return result.score
+  if (typeof result?.distance === 'number') return Math.max(0, Math.min(1, 1 - (result.distance / 2)))
+  return 0
+}
 
 function gapClass(score) {
   if (score >= 0.65) return { cls: 'gap-card-covered', label: 'Covered', Icon: CheckCircle2, color: '#34d399', badgeCls: 'status-badge status-synced' }
@@ -33,7 +40,7 @@ function scoreBar(score) {
 // ── Result Card ───────────────────────────────────────────────
 function ResultCard({ result, index }) {
   const [open, setOpen] = useState(index < 3)
-  const score = result.score ?? result.distance ?? 0
+  const score = relevanceScore(result)
   const { cls, label, Icon, color, badgeCls } = gapClass(score)
   const meta = result.metadata ?? {}
 
@@ -91,7 +98,7 @@ function ResultCard({ result, index }) {
 // ── Scan History Item ─────────────────────────────────────────
 function HistoryItem({ item, onRestore }) {
   const summary = item.results?.length ?? 0
-  const covered = item.results?.filter(r => (r.score ?? 0) >= 0.65).length ?? 0
+  const covered = item.results?.filter(r => relevanceScore(r) >= 0.65).length ?? 0
   return (
     <button onClick={() => onRestore(item)}
       className="flex items-start gap-3 px-4 py-3 rounded-xl bg-white/4 hover:bg-white/7 transition-colors text-left w-full group">
@@ -160,9 +167,9 @@ export default function ComplianceScanPage() {
     URL.revokeObjectURL(url)
   }
 
-  const covered = results?.filter(r => (r.score ?? 0) >= 0.65).length ?? 0
-  const review  = results?.filter(r => { const s = r.score ?? 0; return s >= 0.4 && s < 0.65 }).length ?? 0
-  const gaps    = results?.filter(r => (r.score ?? 0) < 0.4).length ?? 0
+  const covered = results?.filter(r => relevanceScore(r) >= 0.65).length ?? 0
+  const review  = results?.filter(r => { const s = relevanceScore(r); return s >= 0.4 && s < 0.65 }).length ?? 0
+  const gaps    = results?.filter(r => relevanceScore(r) < 0.4).length ?? 0
 
   return (
     <div className="app-shell" style={{ display: 'flex', height: '100vh', background: '#030304', overflow: 'hidden' }}>

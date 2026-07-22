@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Wifi, WifiOff, Circle } from 'lucide-react'
+import { WifiOff, Circle } from 'lucide-react'
 import { checkHealth } from '../../lib/api'
 
 export default function AppHeader({ title = 'Copilot' }) {
