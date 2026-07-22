@@ -1,126 +1,173 @@
+<div align="center">
+
 # OnBrain
-**An always-on Industrial AI Brain fusing P&IDs and maintenance logs into a unified, predictive knowledge graph to drive zero downtime.**
 
-> 📐 **[Architecture](./architecture.md)** · 📅 **[Build Phases](./phases/README.md)** · 🧪 **[Testing Guide](./phases/testing.md)**
+**Industrial Knowledge Intelligence Engine - Turning fragmented engineering evidence into a connected operating memory using Graph RAG & Generative AI.**
 
----
-
-## The Problem: Industrial Knowledge Fragmentation
-
-In asset-intensive industries, professionals spend up to **35% of their working hours** simply searching for information. Vital data is scattered across 7 to 12 disconnected systems:
-
-- P&IDs and engineering drawings in one place
-- Maintenance work orders in another
-- Operating procedures in a third
-- Inspection records and regulatory submissions buried in email archives
-
-This fragmentation causes **18–22% of unplanned downtime events**, as maintenance teams are forced to make critical decisions without complete equipment history or context. Furthermore, as experienced engineers retire, decades of undocumented knowledge are lost forever.
+[![React](https://img.shields.io/badge/REACT-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/TAILWIND_CSS-38BDF8?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Vite](https://img.shields.io/badge/VITE-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Python](https://img.shields.io/badge/PYTHON-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FASTAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Firebase](https://img.shields.io/badge/FIREBASE-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
+[![Docker](https://img.shields.io/badge/DOCKER-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Google Gemini](https://img.shields.io/badge/GOOGLE_GEMINI-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white)](https://ai.google.dev/)
+[![Neo4j](https://img.shields.io/badge/NEO4J-008CC1?style=for-the-badge&logo=neo4j&logoColor=white)](https://neo4j.com/)
+[![ChromaDB](https://img.shields.io/badge/CHROMADB-FF6F61?style=for-the-badge&logo=database&logoColor=white)](https://www.trychroma.com/)
+[![MongoDB](https://img.shields.io/badge/MONGODB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
 
 ---
 
-## What is OnBrain?
+### 🚀 Built for the Next Generation of High-Context Industrial Operations
+[Explore Workspace](#-key-features) • [System Architecture](#-system-architecture) • [Getting Started](#%EF%B8%8F-getting-started) • [Hackathon Evaluation](#-hackathon-evaluation-highlights)
 
-**OnBrain** is a unified Asset & Operations Brain designed to defeat knowledge fragmentation. It acts as an overarching intelligence layer that ingests heterogeneous documents (like PDFs, P&IDs, forms, and manuals) and connects them into a queryable, living knowledge base.
-
-It turns scattered operational data into actionable insights, ensuring that the right information reaches the right technician at the exact point of need, keeping operations **Always On**.
-
----
-
-## How We Are Solving It
-
-Our solution brings together modern NLP, Knowledge Graphs, and Agentic AI into a seamless four-layer platform:
-
-### 1. [Document Ingestion Pipeline](./docs/ingestion.md)
-We process unstructured and structured data (PDFs, P&IDs, logs) using OCR ([Tesseract / PaddleOCR](./docs/ingestion.md#1-ocr-engine)), computer vision ([YOLOv8 for P&ID symbol detection](./docs/ingestion.md#2-pid--cv-parsing)), and [LLM-based entity extraction](./docs/ingestion.md#3-entity-extraction) to extract equipment tags, parameters, dates, and personnel.
-
-### 2. [Unified Knowledge Layer](./docs/knowledge-layer.md)
-Extracted entities are mapped into a [unified knowledge graph (Neo4j)](./docs/knowledge-layer.md#knowledge-graph) with relationships across document types — linking a specific pump in a P&ID to its failure history and its maintenance manual. A [vector store (ChromaDB)](./docs/knowledge-layer.md#vector-store) enables semantic search, while [MongoDB](./docs/knowledge-layer.md#document-metadata-store) tracks all document metadata.
-
-### 3. [Expert AI Agents](./docs/agents.md)
-A [Copilot Agent](./docs/agents.md#copilot-agent) provides conversational Q&A using Retrieval-Augmented Generation (RAG) over the knowledge graph and vector database, answering operational queries instantly with **source citations and confidence scores**. An [RCA Agent](./docs/agents.md#rca-agent) performs root-cause analysis by fusing failure history, OEM manuals, and inspection logs.
-
-### 4. [Application Layer](./docs/application.md)
-A full-featured [web dashboard](./docs/application.md#web-dashboard) for engineers and a [mobile-responsive chat](./docs/application.md#mobile-responsive-chat) for field technicians — both backed by the same FastAPI backend, secured with [Firebase Auth](./docs/application.md#authentication).
-
-> **See the full data pipeline:** [Data Flow →](./docs/data-flow.md)
+</div>
 
 ---
 
-## System Architecture
+## ⚡ Executive Summary
+
+In complex industrial facilities, engineers and maintenance technicians spend **up to 35% of their working hours** manually searching across fragmented siloes — P&IDs, equipment manuals, incident logs, work orders, and ISO regulatory standards.
+
+**OnBrain** bridges this gap by unifying unstructured engineering documents into a **Graph RAG (Retrieval-Augmented Generation)** knowledge system. By fusing **Neo4j Knowledge Graphs** (for equipment relationship mapping) with **ChromaDB Vector Stores** (for semantic chunk search) and **Google Gemini** (for reasoning & RCA synthesis), OnBrain delivers instant, verifiable, source-cited answers to frontline technicians.
+
+---
+
+## 🎯 The Problem & Solution
+
+| ❌ The Industrial Problem | ✅ The OnBrain Solution |
+| :--- | :--- |
+| **Fragmented Siloes**: Critical history is trapped across 7–12 separate databases and PDF archives. | **Unified Operating Memory**: Ingests PDFs, CSVs, JSONs, and TXT files into a single graph + vector index. |
+| **LLM Hallucinations**: Standard RAG often invents non-existent equipment specs or maintenance steps. | **Graph-Backed Grounding**: Every AI response requires explicit document citations and confidence scoring. |
+| **Lost Expertise**: Decades of tribal knowledge vanish when senior engineers retire. | **Self-Learning Knowledge Graph**: Automatically links equipment tags (e.g., `P-204`) with historical failure events. |
+| **Downtime Losses**: Slow root-cause analysis causes millions in unplanned operational outages. | **Instant Root Cause Analysis**: Automated RCA agent synthesizes failure history, OEM manuals, and inspection logs. |
+
+---
+
+## ✨ Key Features
+
+### 💬 1. Evidence-Backed Copilot
+- **Conversational Intelligence**: Ask complex queries like *"What compliance gaps exist in my documents?"* or *"Show failure history for pump P-204"*.
+- **Source Citations & Confidence**: Every response lists exact source documents, page numbers, and confidence metrics (`High`, `Medium`, `Pending`).
+- **Clean Responsive UX**: Optimized for field mobile viewports as well as widescreen engineering control panels.
+
+### 📥 2. Automated Document Ingestion Pipeline
+- **Multi-Taxonomy Intake**: Auto-detects and indexes manuals, work orders, inspection reports, P&ID drawings, and regulatory standards.
+- **Entity Extraction**: Automatically extracts equipment tags, operational parameters, dates, and personnel.
+- **Dual Vector & Graph Indexing**: Generates 384-dimensional embeddings stored in ChromaDB while simultaneously linking nodes and relationships in Neo4j.
+
+### 🔍 3. Knowledge Explorer
+- **High-Density Corpus Table**: Full visibility into indexed files, chunk counts, extracted entities, and synchronization status.
+- **Taxonomy Filtering**: One-click filtering by document type (*Manual*, *Work Order*, *Inspection Report*, *Regulation*, *P&ID*).
+
+### 🛡️ 4. Regulatory Evidence & Compliance Scan
+- **Semantic Coverage Analysis**: Search risk scenarios or procedure requirements against indexed regulatory manuals.
+- **Quick-Scan Prompts**: One-click assessment chips for pressure vessel inspection intervals, pump vibration limits, LOTO safety, and ISO 9001 compliance.
+
+---
+
+## 🏗 System Architecture
 
 ```
-Sources → Ingestion Layer → Knowledge Layer → Agent Layer → Application Layer
+                                  +------------------------------------+
+                                  |     Frontline Technician / UI      |
+                                  |    (React 18 + Vite + Tailwind)    |
+                                  +-----------------+------------------+
+                                                    | REST / Streaming API
+                                                    v
+                                  +------------------------------------+
+                                  |          FastAPI Backend           |
+                                  |      (Python 3.11 + Pydantic)      |
+                                  +--------+------------------+--------+
+                                           |                  |
+                    +----------------------+                  +----------------------+
+                    |                                                                |
+                    v                                                                v
+   +---------------------------------+                              +---------------------------------+
+   |      Knowledge Graph (Neo4j)    |                              |    Vector Store (ChromaDB)      |
+   | - Equipment Nodes (e.g., P-204)  |                              | - 384d MiniLM Chunks            |
+   | - Failure Event Relationships   |                              | - Semantic Document Passages    |
+   | - Work Order Lineage            |                              | - Metadata Filtering            |
+   +----------------+----------------+                              +----------------+----------------+
+                    |                                                                |
+                    +----------------------+                  +----------------------+
+                                           |                  |
+                                           v                  v
+                                  +------------------------------------+
+                                  |      Reasoning & Agent Engine      |
+                                  |        (Google Gemini API)         |
+                                  | - Source Citation Verification     |
+                                  | - Root Cause Analysis (RCA)        |
+                                  | - Confidence Scoring Engine        |
+                                  +------------------------------------+
+---
+
+## ⚡️ Getting Started
+
+### Prerequisites
+- **Node.js** v18+ and **npm** v9+
+- **Python** 3.11+
+- **Docker & Docker Compose** (for database services)
+
+### 1. Clone & Configure Environment
+```bash
+git clone https://github.com/Tetra4ge/OnBrain.git
+cd OnBrain
 ```
 
-| Layer | Components | Documentation |
-|-------|-----------|---------------|
-| **Ingestion** | OCR, P&ID parser, entity extraction, normalizer | [docs/ingestion.md](./docs/ingestion.md) |
-| **Knowledge** | ChromaDB, Neo4j, MongoDB | [docs/knowledge-layer.md](./docs/knowledge-layer.md) |
-| **Agents** | Copilot (RAG Q&A), RCA (root-cause analysis) | [docs/agents.md](./docs/agents.md) |
-| **Application** | React dashboard, mobile chat, Firebase Auth | [docs/application.md](./docs/application.md) |
-
-> **Full architecture details:** [architecture.md →](./architecture.md)
-
----
-
-## Tech Stack
-
-| Layer | Technology | Details |
-|-------|-----------|---------|
-| **Frontend** | React 19 + Tailwind CSS | [Application docs](./docs/application.md) |
-| **Backend** | FastAPI | [API Reference](./docs/api-reference.md) |
-| **Vector DB** | ChromaDB | [Knowledge — Vector Store](./docs/knowledge-layer.md#vector-store) |
-| **Graph DB** | Neo4j | [Knowledge — Knowledge Graph](./docs/knowledge-layer.md#knowledge-graph) |
-| **Document DB** | MongoDB | [Knowledge — Metadata Store](./docs/knowledge-layer.md#document-metadata-store) |
-| **LLM — Reasoning** | Gemini | [Agents docs](./docs/agents.md) |
-| **LLM — Extraction** | Groq (Llama) | [Ingestion docs](./docs/ingestion.md#3-entity-extraction) |
-| **CV / P&ID** | YOLOv8 | [Ingestion docs](./docs/ingestion.md#2-pid--cv-parsing) |
-| **OCR** | Tesseract / PaddleOCR | [Ingestion docs](./docs/ingestion.md#1-ocr-engine) |
-| **Auth** | Firebase Auth | [Application — Auth](./docs/application.md#authentication) |
-| **Deployment** | Docker + Render / Vercel | [Application — Deployment](./docs/application.md#deployment) |
-
-> **Full tech inventory with rationale:** [docs/tech-stack.md →](./docs/tech-stack.md)
-
----
-
-## Build Phases
-
-| Phase | Focus | Details | Link |
-|-------|-------|---------|------|
-| **Phase 1 — Foundation** | Repo setup, Docker, services health | Environment & backend scaffolding | [phase-1-foundation.md](./phases/phase-1-foundation.md) |
-| **Phase 2 — Data & Schema** | Demo documents & schema lock | MongoDB, Neo4j, ChromaDB schemas | [phase-2-data-schema.md](./phases/phase-2-data-schema.md) |
-| **Phase 3 — Ingestion** | OCR, extraction, normalizer | Full ingestion pipeline | [phase-3-ingestion.md](./phases/phase-3-ingestion.md) |
-| **Phase 4 — Knowledge Layer** | Graph & vector store population | Neo4j + ChromaDB + MongoDB sync | [phase-4-knowledge.md](./phases/phase-4-knowledge.md) |
-| **Phase 5 — Copilot Agent** | RAG Q&A, citations, confidence | Reasoning agent layer | [phase-5-copilot-agent.md](./phases/phase-5-copilot-agent.md) |
-| **Phase 6 — RCA Agent** | Failure cause analysis | Root-cause workbench | [phase-6-rca-agent.md](./phases/phase-6-rca-agent.md) |
-| **Phase 7 — Frontend Core** | Auth, document upload, chat UI | Web dashboard & mobile | [phase-7-frontend-core.md](./phases/phase-7-frontend-core.md) |
-| **Phase 8 — Frontend Advanced** | Graph explorer, RCA UI | Advanced visualization | [phase-8-frontend-advanced.md](./phases/phase-8-frontend-advanced.md) |
-| **Testing** | E2E integration & verification | Checklist & triage protocol | [testing.md](./phases/testing.md) |
-
-> **Full phase details:** [phases/README.md →](./phases/README.md)
-
----
-
-## Documentation Map
-
-```
-README.md (you are here)
-├── architecture.md ──────── High-level system blueprint
-└── phases/
-    ├── README.md ────────── Build timeline index
-    ├── phase-1-foundation.md
-    ├── phase-2-data-schema.md
-    ├── phase-3-ingestion.md
-    ├── phase-4-knowledge.md
-    ├── phase-5-copilot-agent.md
-    ├── phase-6-rca-agent.md
-    ├── phase-7-frontend-core.md
-    ├── phase-8-frontend-advanced.md
-    └── testing.md
+Create a `.env` file in the `backend/` directory:
+```env
+GEMINI_API_KEY=your_google_gemini_api_key
+NEO4J_URI=bolt://localhost:7687
+NEO4J_USER=neo4j
+NEO4J_PASSWORD=strongpassword
+CHROMA_HOST=localhost
+CHROMA_PORT=8001
+MONGO_URI=mongodb://root:rootpassword@localhost:27017
 ```
 
+### 2. Start Databases via Docker
+```bash
+docker-compose up -d
+```
+
+### 3. Launch Backend API Server
+```bash
+cd backend
+python -m venv venv
+# On Windows:
+.\venv\Scripts\activate
+# On Linux/macOS:
+source venv/bin/activate
+
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
+```
+*API interactive docs available at: `http://localhost:8000/docs`*
+
+### 4. Launch Frontend Web Dashboard
+```bash
+cd ../frontend
+npm install
+npm run dev
+```
+*Web dashboard available at: `http://localhost:5173`*
+
 ---
 
-## License
+## 🏆 Hackathon Evaluation Highlights
 
-See [LICENSE](./LICENSE) for details.
+1. **Zero-Hallucination Grounding**: Unlike pure LLM chatbots, OnBrain cross-checks every generated response against both vector similarity search (ChromaDB) and graph lineage (Neo4j), providing source citations for complete auditability.
+2. **True Industrial Value**: Tackles a multi-billion dollar operational problem (unplanned industrial downtime and lost engineering context).
+3. **Production-Ready UX**: Responsive mobile & desktop interface designed with dark industrial aesthetics, responsive mobile navigation, and non-scrollable focus viewports.
+4. **Hybrid Graph RAG Architecture**: Combines semantic embeddings with graph entity relationships for deep multi-hop reasoning.
+
+---
+
+<div align="center">
+
+**Built Team TetraFourge**
+
+© 2026 OnBrain. All rights reserved.
+
+</div>
