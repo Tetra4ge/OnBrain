@@ -1,7 +1,8 @@
-import { Menu, Wifi, WifiOff, X } from 'lucide-react'
-import { NavLink, Link, useNavigate } from 'react-router-dom'
+import { LogOut, Menu, Wifi, WifiOff, X } from 'lucide-react'
+import { NavLink, Link } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import { checkHealth } from '../../lib/api'
+import { useAuth } from '../../context/AuthContext'
 import '../../pages/HomePage.css'
 
 const navigation = [
@@ -12,10 +13,10 @@ const navigation = [
 ]
 
 export default function WorkspaceShell({ title, eyebrow, children, actions }) {
-  const navigate = useNavigate()
   const headerRef = useRef(null)
   const [online, setOnline] = useState(null)
   const [menuOpen, setMenuOpen] = useState(false)
+  const { user, signOut } = useAuth()
 
   useEffect(() => {
     let active = true
@@ -67,6 +68,7 @@ export default function WorkspaceShell({ title, eyebrow, children, actions }) {
               {online === false ? <WifiOff size={13} /> : <Wifi size={13} />}
               <span className="hidden sm:inline">{online === false ? 'API offline' : online === true ? 'Evidence layer online' : 'Checking API'}</span>
             </span>
+            {user && <button onClick={signOut} className="hidden sm:inline-flex items-center gap-1.5 rounded border border-[#fff9e8]/12 px-2.5 py-1.5 text-[11px] font-semibold text-[#c7bea1] transition hover:border-[#ffbe0b]/40 hover:text-[#ffbe0b]" title={`Sign out ${user.email || ''}`}><span className="max-w-28 truncate">{user.displayName || 'Account'}</span><LogOut size={13} /></button>}
 
             <button 
               onClick={() => setMenuOpen(!menuOpen)}

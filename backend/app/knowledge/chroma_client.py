@@ -47,15 +47,19 @@ def _get_chroma_client():
         except Exception as e:
             logger.warning(f"ChromaDB Cloud init failed: {e}. Falling back to local client.")
 
-    # Local Docker client fallback
+    # Local persistent directory fallback (No Docker required)
     try:
         import chromadb
-        _chroma_client = chromadb.HttpClient(
-            host=settings.CHROMA_HOST,
-            port=settings.CHROMA_PORT,
-            settings=chromadb.Settings(anonymized_telemetry=False),
+        import os
+        
+        # Save vector data directly into a local folder named "chroma_data" inside the backend directory
+        persist_dir = os.path.join(os.getcwd(), "chroma_data")
+        
+        _chroma_client = chromadb.PersistentClient(
+            path=persist_dir,
+            settings=chromadb.Settings(anonymized_telemetry=False)
         )
-        logger.info(f"ChromaDB local client initialized (host={settings.CHROMA_HOST}:{settings.CHROMA_PORT})")
+        logger.info(f"ChromaDB local persistent client initialized at {persist_dir}")
         return _chroma_client
     except Exception as e:
         logger.error(f"ChromaDB local client also failed: {e}")

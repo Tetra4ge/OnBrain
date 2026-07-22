@@ -1,5 +1,12 @@
+const VITE_MODE = import.meta.env.VITE_MODE || 'development';
+// const API_BASE = (VITE_MODE === 'production' ? import.meta.env.VITE_API_PRO_URL : import.meta.env.VITE_API_DEV_URL) || 'http://localhost:8000';
+const API_BASE = (VITE_MODE === 'production' ? import.meta.env.VITE_API_PRO_URL : import.meta.env.VITE_API_DEV_URL);
+
+const BASE_URL = API_BASE.replace(/\/+$/, '')
+
 async function request(path, options = {}) {
-  const res = await fetch(path, options)
+  const url = path.startsWith('http') ? path : `${BASE_URL}${path.startsWith('/') ? '' : '/'}${path}`
+  const res = await fetch(url, options)
   const contentType = res.headers.get('content-type') || ''
   const data = contentType.includes('application/json') ? await res.json() : await res.text()
 
@@ -70,7 +77,7 @@ export async function listEquipmentTags() {
 }
 
 export async function streamCopilotResponse({ query, sessionId, onEvent }) {
-  const response = await fetch('/api/copilot/query', {
+  const response = await fetch(`${BASE_URL}/api/copilot/query`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'text/event-stream' },
     body: JSON.stringify({ query, session_id: sessionId }),

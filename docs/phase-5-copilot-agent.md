@@ -41,7 +41,7 @@ onbrain/backend/app/
 2. **Define tools** (`tools.py`)
    - `search_documents(query)` → calls Phase 4's `semantic_search`.
    - `query_graph(equipment_tag)` → calls Phase 4's graph endpoint logic directly (as a function, not an HTTP round-trip, since it's in-process).
-   - `get_document_metadata(doc_id)` → calls Phase 4's MongoDB client.
+   - `get_document_metadata(doc_id)` → calls Phase 4's Firestore client.
    - Each tool must return data with enough structure that the agent can cite it (doc_id, page_number, source_filename attached to every result).
 
 3. **Build query planning** — the agent decides which tool(s) to call based on the question. Keep this simple for 48 hours: a single-pass "call search_documents and query_graph if an equipment tag is mentioned, then synthesize" is enough — don't build a complex multi-step planning loop unless time allows after the checkpoint below passes.
@@ -56,7 +56,7 @@ onbrain/backend/app/
 
 6. **Build the endpoint** (`api/routes/copilot.py`)
    - `POST /api/copilot/query` — implement as Server-Sent Events so the frontend can show streaming tokens. Verify current FastAPI SSE implementation syntax against FastAPI's docs — there are a few different patterns and you want the one that's current.
-   - `GET /api/copilot/history` — minimal implementation: store the last N exchanges per user session in MongoDB, no need for a separate dedicated store.
+   - `GET /api/copilot/history` — store the last N exchanges per user session in Firestore, no separate store required.
 
 7. **[Stretch] Contradiction detection** (`contradiction.py`) — attempt only after the checkpoint below passes with time to spare
    - When retrieval returns multiple chunks relevant to the same entity, add a check: do they agree? A simple approach is asking the LLM directly, as part of synthesis, "do these sources agree or conflict?" and surfacing a flag in the response rather than building a separate detection pipeline.

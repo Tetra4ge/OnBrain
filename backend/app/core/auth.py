@@ -1,3 +1,4 @@
+import json
 import os
 import logging
 from app.core.config import settings
@@ -15,10 +16,21 @@ try:
 
     service_account_path = settings.FIREBASE_SERVICE_ACCOUNT_PATH
 
-    if service_account_path and os.path.exists(service_account_path):
+    service_account_json = settings.FIREBASE_SERVICE_ACCOUNT_JSON
+    if service_account_json:
+        try:
+            cred = credentials.Certificate(json.loads(service_account_json))
+            firebase_app = firebase_admin.initialize_app(cred, {"projectId": settings.FIREBASE_PROJECT_ID} if settings.FIREBASE_PROJECT_ID else None)
+            logger.info("Firebase Admin SDK initialized from FIREBASE_SERVICE_ACCOUNT_JSON.")
+        except Exception as e:
+            firebase_init_error = f"Failed to initialize Firebase Admin SDK from JSON: {e}"
+            logger.error(firebase_init_error)
+            if not is_local_dev:
+                raise RuntimeError(firebase_init_error) from e
+    elif service_account_path and os.path.exists(service_account_path):
         try:
             cred = credentials.Certificate(service_account_path)
-            firebase_app = firebase_admin.initialize_app(cred)
+            firebase_app = firebase_admin.initialize_app(cred, {"projectId": settings.FIREBASE_PROJECT_ID} if settings.FIREBASE_PROJECT_ID else None)
             logger.info("Firebase Admin SDK initialized successfully from service account file.")
         except Exception as e:
             firebase_init_error = f"Failed to initialize Firebase Admin SDK from certificate: {e}"

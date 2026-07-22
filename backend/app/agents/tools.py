@@ -2,7 +2,7 @@ import logging
 from typing import Dict, Any, List
 from app.knowledge.chroma_client import chroma_client
 from app.knowledge.neo4j_client import neo4j_client
-from app.knowledge.mongo_client import mongo_client
+from app.knowledge.firestore_client import firestore_client
 
 logger = logging.getLogger(__name__)
 
@@ -47,7 +47,7 @@ def get_document_metadata(doc_id: str) -> Dict[str, Any]:
     Retrieve full metadata for a specific document.
     """
     try:
-        result = mongo_client.get_document(doc_id=doc_id)
+        result = firestore_client.get_document(doc_id=doc_id)
         if not result:
             return {"error": f"Document {doc_id} not found."}
         return result

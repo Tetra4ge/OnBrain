@@ -16,6 +16,7 @@ class SyncStatus(str, Enum):
     PENDING = "pending"
     PROCESSING = "processing"
     COMPLETE = "complete"
+    PARTIAL = "partial"
     FAILED = "failed"
 
 class RelationshipType(str, Enum):
@@ -87,7 +88,7 @@ class GraphRelationship(BaseModel):
 # --- Storage Metadata Schemas ---
 
 class DocumentMetadata(BaseModel):
-    id: str = Field(..., alias="_id", description="MongoDB unique document ID")
+    id: str = Field(..., alias="doc_id", description="Firestore document ID")
     filename: str = Field(..., description="Original file name")
     doc_type: DocType = Field(..., description="Document type tag")
     upload_date: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat(), description="Upload ISO timestamp")

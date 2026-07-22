@@ -16,16 +16,11 @@
 [![ChromaDB](https://img.shields.io/badge/CHROMADB-FF6F61?style=for-the-badge&logo=database&logoColor=white)](https://www.trychroma.com/)
 [![MongoDB](https://img.shields.io/badge/MONGODB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
 
----
-
-### 🚀 Built for the Next Generation of High-Context Industrial Operations
-[Explore Workspace](#-key-features) • [System Architecture](#-system-architecture) • [Getting Started](#%EF%B8%8F-getting-started) • [Hackathon Evaluation](#-hackathon-evaluation-highlights)
-
 </div>
 
 ---
 
-## ⚡ Executive Summary
+## Problem Statement
 
 In complex industrial facilities, engineers and maintenance technicians spend **up to 35% of their working hours** manually searching across fragmented siloes — P&IDs, equipment manuals, incident logs, work orders, and ISO regulatory standards.
 
@@ -33,7 +28,7 @@ In complex industrial facilities, engineers and maintenance technicians spend **
 
 ---
 
-## 🎯 The Problem & Solution
+## The Problem & Solution
 
 | ❌ The Industrial Problem | ✅ The OnBrain Solution |
 | :--- | :--- |
@@ -46,21 +41,21 @@ In complex industrial facilities, engineers and maintenance technicians spend **
 
 ## ✨ Key Features
 
-### 💬 1. Evidence-Backed Copilot
+### 1. Evidence-Backed Copilot
 - **Conversational Intelligence**: Ask complex queries like *"What compliance gaps exist in my documents?"* or *"Show failure history for pump P-204"*.
 - **Source Citations & Confidence**: Every response lists exact source documents, page numbers, and confidence metrics (`High`, `Medium`, `Pending`).
 - **Clean Responsive UX**: Optimized for field mobile viewports as well as widescreen engineering control panels.
 
-### 📥 2. Automated Document Ingestion Pipeline
+### 2. Automated Document Ingestion Pipeline
 - **Multi-Taxonomy Intake**: Auto-detects and indexes manuals, work orders, inspection reports, P&ID drawings, and regulatory standards.
 - **Entity Extraction**: Automatically extracts equipment tags, operational parameters, dates, and personnel.
 - **Dual Vector & Graph Indexing**: Generates 384-dimensional embeddings stored in ChromaDB while simultaneously linking nodes and relationships in Neo4j.
 
-### 🔍 3. Knowledge Explorer
+### 3. Knowledge Explorer
 - **High-Density Corpus Table**: Full visibility into indexed files, chunk counts, extracted entities, and synchronization status.
 - **Taxonomy Filtering**: One-click filtering by document type (*Manual*, *Work Order*, *Inspection Report*, *Regulation*, *P&ID*).
 
-### 🛡️ 4. Regulatory Evidence & Compliance Scan
+### 4. Regulatory Evidence & Compliance Scan
 - **Semantic Coverage Analysis**: Search risk scenarios or procedure requirements against indexed regulatory manuals.
 - **Quick-Scan Prompts**: One-click assessment chips for pressure vessel inspection intervals, pump vibration limits, LOTO safety, and ISO 9001 compliance.
 
@@ -100,6 +95,7 @@ In complex industrial facilities, engineers and maintenance technicians spend **
                                   | - Root Cause Analysis (RCA)        |
                                   | - Confidence Scoring Engine        |
                                   +------------------------------------+
+---
 ---
 
 ## ⚡️ Getting Started

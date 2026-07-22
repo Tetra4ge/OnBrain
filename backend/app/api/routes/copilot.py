@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 from app.agents.copilot_agent import CopilotAgent
-from app.knowledge.mongo_client import _get_collection
+from app.knowledge.firestore_client import get_collection
 
 router = APIRouter(prefix="/copilot", tags=["Copilot Agent"])
 logger = logging.getLogger(__name__)
@@ -17,8 +17,7 @@ class QueryRequest(BaseModel):
     session_id: str
 
 def get_history_collection():
-    doc_col = _get_collection()
-    return doc_col.database["chat_history"]
+    return get_collection("chat_history")
 
 @router.post("/query")
 async def copilot_query(req: QueryRequest):
@@ -34,8 +33,8 @@ async def copilot_query(req: QueryRequest):
     history = []
     try:
         col = get_history_collection()
-        history_record = col.find_one({"_id": req.session_id})
-        history = history_record.get("history", []) if history_record else []
+        history_record = col.document(req.session_id).get()
+        history = history_record.to_dict().get("history", []) if history_record.exists else []
     except Exception as exc:
         logger.warning("Chat history unavailable; continuing without it: %s", exc)
     
@@ -61,11 +60,7 @@ async def copilot_query(req: QueryRequest):
             new_history = new_history[-20:]
             if col is not None:
                 try:
-                    col.update_one(
-                        {"_id": req.session_id},
-                        {"$set": {"history": new_history}},
-                        upsert=True
-                    )
+                    col.document(req.session_id).set({"history": new_history}, merge=True)
                 except Exception as exc:
                     logger.warning("Could not persist chat history: %s", exc)
             
@@ -79,9 +74,9 @@ async def copilot_query(req: QueryRequest):
 def get_history(session_id: str) -> Dict[str, Any]:
     try:
         col = get_history_collection()
-        record = col.find_one({"_id": session_id})
+        record = col.document(session_id).get()
     except Exception:
         return {"session_id": session_id, "history": []}
-    if not record:
+    if not record.exists:
         return {"session_id": session_id, "history": []}
-    return {"session_id": session_id, "history": record["history"]}
+    return {"session_id": session_id, "history": record.to_dict().get("history", [])}
