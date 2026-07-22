@@ -5,10 +5,10 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
-  // The project intentionally keeps one .env at the repository root.
-  const envDir = resolve(process.cwd(), '..')
+  // Load env from the frontend directory as requested by the user
+  const envDir = process.cwd()
   const env = loadEnv(mode, envDir, '')
-  const apiTarget = env.VITE_API_URL || 'http://localhost:8000'
+  const apiTarget = env.VITE_API_DEV_URL || env.VITE_API_URL || 'http://localhost:8000'
 
   return {
   envDir,
