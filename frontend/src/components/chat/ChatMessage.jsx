@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ChevronDown, ChevronUp, FileText, ExternalLink } from 'lucide-react'
+import { ChevronDown, ChevronUp, FileText } from 'lucide-react'
 
 const confidenceConfig = {
   high:   { label: 'High Confidence',   color: 'text-emerald-400', bg: 'bg-emerald-400/10 border-emerald-400/30' },
@@ -13,28 +13,24 @@ export default function ChatMessage({ message }) {
   const isUser = role === 'user'
 
   return (
-    <div className="flex justify-start mb-6 animate-fade-up w-full">
+    <div className={`ob-chat-message animate-fade-up ${isUser ? 'is-user' : 'is-assistant'}`}>
       {/* Avatar */}
-      <div className="flex-shrink-0 mr-4 mt-1">
+      <div className="ob-chat-avatar">
         {isUser ? (
-          <div className="w-8 h-8 rounded-xl bg-[#242423] border border-white/10 flex items-center justify-center shadow-sm">
+          <div className="ob-chat-avatar-user">
             <span className="font-mono text-[#94A3B8] text-xs font-bold">U</span>
           </div>
         ) : (
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#EA580C] to-[#F7931A] flex items-center justify-center shadow-[0_0_12px_rgba(247,147,26,0.3)]">
+          <div className="ob-chat-avatar-assistant">
             <span className="font-mono text-white text-xs font-bold">AI</span>
           </div>
         )}
       </div>
 
-      <div className="flex-1 min-w-0 flex flex-col gap-3">
+      <div className="ob-chat-message-content">
         {/* Bubble */}
         <div
-          className={`rounded-2xl px-5 py-4 text-base leading-relaxed font-body ${
-            isUser
-              ? 'bg-[#242423]/50 border border-white/5 text-white'
-              : 'bg-transparent text-white/90'
-          }`}
+          className={`ob-chat-bubble ${isUser ? 'is-user' : 'is-assistant'}`}
         >
           {content}
         </div>

@@ -99,7 +99,7 @@ export default function CopilotPage() {
 
         {/* Input area — full-width border, constrained content */}
         <div className="ob-chat-dock" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-          <div style={{ width: '100%', maxWidth: CHAT_MAX_W, margin: '0 auto' }}>
+          <div className="ob-copilot-input" style={{ width: '100%', maxWidth: CHAT_MAX_W, margin: '0 auto' }}>
             <ChatInput onSend={sendMessage} disabled={loading} />
           </div>
         </div>

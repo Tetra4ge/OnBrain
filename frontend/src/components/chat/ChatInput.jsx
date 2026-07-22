@@ -38,7 +38,7 @@ export default function ChatInput({ onSend, disabled = false }) {
   }
 
   return (
-    <div className="px-4 py-4">
+    <div className="ob-chat-composer px-4 py-4">
       {/* Quick action chips */}
       <div className="flex flex-wrap gap-2 mb-3">
         {QUICK_ACTIONS.map((action) => (
