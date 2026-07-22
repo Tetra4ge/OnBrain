@@ -4,14 +4,15 @@
    Fonts: Merriweather (headings) · Slabo 27px (body) · JetBrains Mono (data)
    ============================================================ */
 
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700&family=Manrope:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 /* ── Design Tokens ─────────────────────────────────────────── */
 :root {
   /* Backgrounds */
-  --bg-void:          #030304;   /* True Void */
-  --surface:          #242423;   /* Carbon Black */
-  --surface-mid:      #1a1a19;
+  --bg-void:          #181609;
+  --surface:          #272311;
+  --surface-mid:      #201d0d;
 
   /* Text */
   --fg:               #FFFFFF;
@@ -21,13 +22,13 @@
   --border:           #1E293B;
 
   /* Accents */
-  --orange-primary:   #F7931A;   /* Bitcoin Orange */
-  --orange-secondary: #EA580C;   /* Burnt Orange */
-  --gold:             #F5CB5C;   /* Tuscan Sun */
+  --orange-primary:   #FFBE0B;   /* Turmeric */
+  --orange-secondary: #D99500;   /* Deep Turmeric */
+  --gold:             #FFDA62;   /* Soft Gold */
 
   /* Typography */
-  --font-heading: 'Merriweather', Georgia, serif;
-  --font-body:    'Slabo 27px', Georgia, serif;
+  --font-heading: 'Barlow Condensed', Impact, sans-serif;
+  --font-body:    'Manrope', Arial, sans-serif;
   --font-mono:    'JetBrains Mono', 'Courier New', monospace;
 }
 
