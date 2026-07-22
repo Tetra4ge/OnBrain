@@ -19,17 +19,17 @@ export default function CopilotPage() {
   }, [messages, loading])
 
   return (
-    <div style={{ display: 'flex', height: '100vh', background: '#030304', overflow: 'hidden' }}>
+    <div className="app-shell ob-workspace-shell" style={{ display: 'flex', height: '100vh', background: 'var(--bg-void)', overflow: 'hidden' }}>
       {/* Sidebar */}
       <AppSidebar />
 
       {/* Main column */}
-      <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, overflow: 'hidden' }}>
+      <div className="app-main ob-workspace-main" style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, overflow: 'hidden' }}>
         {/* Header */}
         <AppHeader title="Copilot" />
 
         {/* Chat scroll area */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem 1rem' }}>
+        <div className="ob-workspace-scroll" style={{ flex: 1, overflowY: 'auto', padding: '1.5rem 1rem' }}>
           {/* Ambient glow */}
           <div
             className="pointer-events-none"
@@ -72,7 +72,7 @@ export default function CopilotPage() {
         </div>
 
         {/* Input area — full-width border, constrained content */}
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', background: 'rgba(3,3,4,0.85)' }}>
+        <div className="ob-chat-dock" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
           <div style={{ width: '100%', maxWidth: CHAT_MAX_W, margin: '0 auto' }}>
             <ChatInput onSend={sendMessage} disabled={loading} />
           </div>

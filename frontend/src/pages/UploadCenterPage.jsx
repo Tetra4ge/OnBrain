@@ -191,11 +191,11 @@ export default function UploadCenterPage() {
   }
 
   return (
-    <div className="app-shell" style={{ display: 'flex', height: '100vh', background: '#030304', overflow: 'hidden' }}>
+    <div className="app-shell ob-workspace-shell" style={{ display: 'flex', height: '100vh', background: 'var(--bg-void)', overflow: 'hidden' }}>
       <div className="app-sidebar"><AppSidebar /></div>
-      <div className="app-main" style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, overflow: 'hidden' }}>
+      <div className="app-main ob-workspace-main" style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0, overflow: 'hidden' }}>
         <AppHeader title="Upload Center" />
-        <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem 1.5rem 2rem' }}>
+        <div className="ob-workspace-scroll" style={{ flex: 1, overflowY: 'auto', padding: '1.5rem 1.5rem 2rem' }}>
           <div className="pointer-events-none" style={{
             position: 'fixed', top: 0, right: 0, width: '32rem', height: '32rem',
             background: '#F7931A', opacity: 0.025, filter: 'blur(120px)', borderRadius: '50%',

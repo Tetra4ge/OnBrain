@@ -1,6 +1,7 @@
 import { ArrowRight, ArrowUpRight, BrainCircuit, Check, CircleAlert, FileText, Network, Play, ShieldCheck, Sparkles } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import './HomePage.css'
+import useLandingLenis from '../hooks/useLandingLenis'
 
 const capabilities = [
   ['Unify the evidence', 'Bring manuals, work orders, inspection reports and drawings into one searchable operating memory.', FileText],
@@ -15,6 +16,8 @@ const activity = [
 ]
 
 export default function HomePage() {
+  useLandingLenis()
+
   return (
     <main className="ob-home">
       <div className="ob-noise" aria-hidden="true" />

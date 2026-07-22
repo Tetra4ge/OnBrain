@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import {
-  Zap, MessageSquare, Upload, FileText,
+  BrainCircuit, MessageSquare, Upload, FileText,
   ChevronLeft, ChevronRight, BarChart3, Home
 } from 'lucide-react'
 
@@ -20,7 +20,7 @@ export default function AppSidebar() {
     <aside
       className={`
         flex flex-col h-full
-        bg-[#0d0d0c] border-r border-white/8
+        ob-workspace-sidebar bg-[#0d0d0c] border-r border-white/8
         transition-all duration-300 ease-in-out
         ${collapsed ? 'w-16' : 'w-60'}
       `}
@@ -29,13 +29,13 @@ export default function AppSidebar() {
       <div className={`flex items-center h-16 px-4 border-b border-white/8 flex-shrink-0 ${collapsed ? 'justify-center' : 'gap-3'}`}>
         <button
           onClick={() => navigate('/')}
-          className="flex-shrink-0 w-8 h-8 rounded-lg bg-gradient-to-br from-[#EA580C] to-[#F7931A] flex items-center justify-center shadow-[0_0_12px_rgba(247,147,26,0.4)] hover:scale-110 transition-transform"
+          className="ob-workspace-mark flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center hover:scale-110 transition-transform"
           aria-label="Go to homepage"
         >
-          <Zap size={16} className="text-white" strokeWidth={2.5} />
+          <BrainCircuit size={17} className="text-[#181609]" strokeWidth={2.3} />
         </button>
         {!collapsed && (
-          <span className="font-heading font-bold text-lg gradient-text">OnBrain</span>
+          <span className="font-heading font-bold text-lg text-[#fff9e8] tracking-wide">ONBRAIN</span>
         )}
       </div>
 
@@ -50,7 +50,7 @@ export default function AppSidebar() {
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group
                    ${isActive
-                    ? 'bg-[#F7931A]/15 text-[#F7931A] border border-[#F7931A]/30'
+                    ? 'ob-workspace-active bg-[#F7931A]/15 text-[#F7931A] border border-[#F7931A]/30'
                     : 'text-[#94A3B8] hover:text-white hover:bg-white/6'
                   }
                    ${collapsed ? 'justify-center' : ''}`

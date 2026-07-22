@@ -17,12 +17,12 @@ export default function AppHeader({ title = 'Copilot' }) {
   }, [])
 
   return (
-    <header className="h-16 flex items-center justify-between px-6 border-b border-white/8 bg-[#030304]/60 backdrop-blur-sm flex-shrink-0">
+    <header className="ob-workspace-header h-16 flex items-center justify-between px-6 border-b border-white/8 backdrop-blur-sm flex-shrink-0">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2">
-        <span className="font-mono text-xs tracking-widest uppercase text-[#94A3B8]">OnBrain</span>
+        <span className="font-mono text-[10px] tracking-[0.16em] uppercase text-[#c7bea1]">OnBrain / workspace</span>
         <span className="text-white/20">/</span>
-        <span className="font-heading font-semibold text-sm text-white">{title}</span>
+        <span className="font-heading font-semibold text-base tracking-wide text-white">{title}</span>
       </div>
 
       {/* Status indicator */}

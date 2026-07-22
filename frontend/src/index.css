@@ -290,6 +290,34 @@ body {
 .doc-pill-pid          { color: #F5CB5C; border-color: rgba(245,203,92,0.3);  background: rgba(245,203,92,0.08); }
 .doc-pill-root         { color: #94A3B8; border-color: rgba(148,163,184,0.2); background: rgba(148,163,184,0.06); }
 
+/* â”€â”€ Unified workspace shell â€” shares the landing page's Turmeric + Malt language â”€â”€ */
+.ob-workspace-shell {
+  color: #fff9e8;
+  background:
+    radial-gradient(circle at 95% 0%, rgba(255,190,11,.08), transparent 28rem),
+    var(--bg-void) !important;
+}
+
+.ob-workspace-main { background: rgba(24,22,9,.84); }
+.ob-workspace-sidebar { background: #201d0d !important; border-color: rgba(255,218,98,.13) !important; }
+.ob-workspace-mark { color: #181609; background: #ffbe0b; box-shadow: 0 0 18px rgba(255,190,11,.23); }
+.ob-workspace-active { background: rgba(255,190,11,.12) !important; border-color: rgba(255,190,11,.34) !important; color: #ffbe0b !important; }
+.ob-workspace-header { background: rgba(32,29,13,.82); border-color: rgba(255,218,98,.13) !important; }
+.ob-workspace-scroll { scrollbar-color: rgba(255,190,11,.36) transparent; }
+.ob-chat-dock { background: rgba(24,22,9,.94); border-color: rgba(255,218,98,.13) !important; }
+
+.ob-workspace-shell .glass-card,
+.ob-workspace-shell .glass-dark {
+  background: rgba(39,35,17,.78);
+  border-color: rgba(255,218,98,.13);
+  box-shadow: 0 14px 36px rgba(0,0,0,.14);
+}
+
+.ob-workspace-shell .section-label { color: #ffbe0b; }
+.ob-workspace-shell .drop-zone { border-color: rgba(255,190,11,.38); background: rgba(255,190,11,.025); }
+.ob-workspace-shell .drop-zone:hover,
+.ob-workspace-shell .drop-zone.drag-over { border-color: #ffbe0b; background: rgba(255,190,11,.07); box-shadow: 0 0 26px rgba(255,190,11,.12); }
+
 /* ── Phase 8: Progress Stripe ──────────────────────────────── */
 @keyframes progress-stripe {
   0%   { background-position: 0 0; }
