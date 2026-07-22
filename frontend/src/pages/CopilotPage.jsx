@@ -48,7 +48,7 @@ export default function CopilotPage() {
           />
 
           {/* Content column — centered */}
-          <div style={{ width: '100%', maxWidth: CHAT_MAX_W, margin: '0 auto' }}>
+          <div className="ob-app-content ob-copilot-column" style={{ width: '100%', maxWidth: CHAT_MAX_W, margin: '0 auto' }}>
             {messages.length <= 1 && (
               <>
                 <WorkspacePageHero

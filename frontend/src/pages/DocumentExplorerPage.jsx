@@ -183,7 +183,7 @@ export default function DocumentExplorerPage() {
             position: 'fixed', top: 0, right: 0, width: '28rem', height: '28rem',
             background: '#60a5fa', opacity: 0.015, filter: 'blur(120px)', borderRadius: '50%',
           }} />
-          <div style={{ maxWidth: '72rem', margin: '0 auto' }}>
+          <div className="ob-app-content" style={{ maxWidth: '72rem', margin: '0 auto' }}>
 
             {/* Heading */}
             <WorkspacePageHero

@@ -201,7 +201,7 @@ export default function UploadCenterPage() {
             position: 'fixed', top: 0, right: 0, width: '32rem', height: '32rem',
             background: '#F7931A', opacity: 0.025, filter: 'blur(120px)', borderRadius: '50%',
           }} />
-          <div style={{ maxWidth: '62rem', margin: '0 auto' }}>
+          <div className="ob-app-content" style={{ maxWidth: '62rem', margin: '0 auto' }}>
             <WorkspacePageHero
               eyebrow="Document ingestion"
               title={<>Turn files into <em>working evidence.</em></>}

@@ -185,7 +185,7 @@ export default function ComplianceScanPage() {
             background: '#34d399', opacity: 0.02, filter: 'blur(120px)', borderRadius: '50%',
           }} />
 
-          <div style={{ maxWidth: '64rem', margin: '0 auto' }}>
+          <div className="ob-app-content" style={{ maxWidth: '64rem', margin: '0 auto' }}>
 
             {/* Heading */}
             <WorkspacePageHero
