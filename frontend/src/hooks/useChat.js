@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { streamCopilotResponse } from '../lib/api'
+import { streamCopilotResponse, uploadCopilotImage } from '../lib/api'
 
 const WELCOME_MESSAGE = {
   id: 'welcome',
@@ -66,7 +66,48 @@ export function useChat() {
     }
   }, [])
 
+  const uploadImage = useCallback(async (file) => {
+    const sessionId = localStorage.getItem('onbrain_chat_session') || crypto.randomUUID()
+    localStorage.setItem('onbrain_chat_session', sessionId)
+
+    const userMsg = {
+      id:      `user-img-${Date.now()}`,
+      role:    'user',
+      content: `[Uploaded Image: ${file.name}]`,
+    }
+
+    setMessages((prev) => [...prev, userMsg])
+    setLoading(true)
+
+    try {
+      const response = await uploadCopilotImage(file, sessionId)
+      
+      const aiMsg = {
+        id:               `ai-img-${Date.now()}`,
+        role:             'assistant',
+        content:          `Image processed and synced to Knowledge Graph!\n\n**Analysis Summary:**\n${response.extracted_text}`,
+        confidence:       'high',
+        confidence_score: 1.0,
+        citations:        [],
+      }
+      setMessages((prev) => [...prev, aiMsg])
+    } catch (err) {
+      const errMsg = {
+        id:         `err-${Date.now()}`,
+        role:       'assistant',
+        content:    `Image processing failed: ${err.message}`,
+        confidence: 'low',
+        confidence_score: 0,
+        citations:  [],
+      }
+      setMessages((prev) => [...prev, errMsg])
+      console.error('[useChat] image error:', err)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
   const clearChat = useCallback(() => setMessages([WELCOME_MESSAGE]), [])
 
-  return { messages, loading, sendMessage, clearChat }
+  return { messages, loading, sendMessage, uploadImage, clearChat }
 }

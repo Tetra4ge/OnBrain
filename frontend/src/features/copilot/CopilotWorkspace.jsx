@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { ArrowUpRight, Send, Trash2 } from 'lucide-react'
+import { ArrowUpRight, Send, Trash2, Paperclip } from 'lucide-react'
 import WorkspaceShell from '../../components/workspace/WorkspaceShell'
 import { Panel, StatusBadge } from '../../components/workspace/WorkspaceUi'
 import { useChat } from '../../hooks/useChat'
@@ -11,13 +11,23 @@ const starters = [
 ]
 
 export default function CopilotWorkspace() {
-  const { messages, loading, sendMessage, clearChat } = useChat()
+  const { messages, loading, sendMessage, uploadImage, clearChat } = useChat()
   const [query, setQuery] = useState('')
   const bottomRef = useRef(null)
+  const fileInputRef = useRef(null)
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, loading])
+
   const submit = event => { event.preventDefault(); if (query.trim()) { sendMessage(query.trim()); setQuery('') } }
+
+  const handleImageChange = event => {
+    const file = event.target.files?.[0]
+    if (file) {
+      uploadImage(file)
+    }
+  }
 
   return (
     <WorkspaceShell title="Copilot" eyebrow="Evidence-backed investigation" actions={messages.length > 1 && <button onClick={clearChat} className="inline-flex items-center gap-1.5 rounded border border-[#fff9e8]/10 px-2.5 py-1.5 text-xs font-semibold text-[#c7bea1] hover:border-rose-300/30 hover:text-rose-200"><Trash2 size={13} /> <span className="hidden sm:inline">Clear chat</span></button>}>
@@ -35,6 +45,22 @@ export default function CopilotWorkspace() {
           </div>
           <form onSubmit={submit} className="shrink-0 border-t border-[#fff9e8]/10 p-2 bg-[#1a180b]/90">
             <div className="flex items-center gap-2 rounded border border-[#fff9e8]/15 bg-[#141208] p-1.5 focus-within:border-[#ffbe0b]/70">
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={loading}
+                className="grid size-9 shrink-0 place-items-center rounded border border-[#fff9e8]/10 text-[#c7bea1] transition hover:bg-white/5 hover:text-[#fff9e8] disabled:opacity-40"
+                aria-label="Upload image"
+              >
+                <Paperclip size={15} />
+              </button>
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImageChange}
+                accept="image/*"
+                className="hidden"
+              />
               <input type="text" value={query} onChange={event => setQuery(event.target.value)} onKeyDown={event => { if (event.key === 'Enter') submit(event) }} disabled={loading} placeholder="Ask about uploaded records, equipment, or procedures…" className="h-9 flex-1 min-w-0 bg-transparent px-2 text-sm text-[#fff9e8] outline-none focus:outline-none focus-visible:outline-none focus:ring-0 placeholder:text-[#8e876e] disabled:opacity-60" />
               <button disabled={loading || !query.trim()} className="grid size-9 shrink-0 place-items-center rounded bg-[#ffbe0b] text-[#181609] transition hover:bg-[#ffda62] disabled:cursor-not-allowed disabled:opacity-40" aria-label="Send query"><Send size={15} /></button>
             </div>

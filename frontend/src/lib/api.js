@@ -107,3 +107,14 @@ export async function streamCopilotResponse({ query, sessionId, onEvent }) {
     if (done) break
   }
 }
+
+export async function uploadCopilotImage(file, sessionId) {
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('session_id', sessionId)
+
+  return request('/api/copilot/image', {
+    method: 'POST',
+    body: formData,
+  })
+}
