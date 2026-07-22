@@ -40,11 +40,15 @@ def calculate_confidence(search_results: List[Dict[str, Any]]) -> float:
 
 class CopilotAgent:
     def __init__(self):
-        self.model = genai.GenerativeModel(
-            model_name=MODEL_NAME,
-            system_instruction=SYSTEM_INSTRUCTION,
-            generation_config=genai.GenerationConfig(temperature=0.2)
-        )
+        self.model = None
+        api_key = settings.GEMINI_API_KEY
+        if settings.USE_GENERATIVE_COPILOT and api_key and not api_key.startswith("your_"):
+            genai.configure(api_key=api_key)
+            self.model = genai.GenerativeModel(
+                model_name=MODEL_NAME,
+                system_instruction=SYSTEM_INSTRUCTION,
+                generation_config=genai.GenerationConfig(temperature=0.2)
+            )
 
     async def process_query_stream(self, query: str, history: List[Dict[str, str]] = None):
         """
@@ -88,8 +92,9 @@ class CopilotAgent:
                 doc_ref = f"{res['doc_id']}:{res['page_number']}"
                 citations_metadata[doc_ref] = {
                     "doc_id": res['doc_id'],
-                    "page_number": res['page_number'],
-                    "source_filename": res['source_filename']
+                    "title": res['source_filename'],
+                    "page": res['page_number'],
+                    "snippet": res['text'][:240],
                 }
                 context_parts.append(f"[{doc_ref}] (File: {res['source_filename']}): {res['text']}")
                 
@@ -112,11 +117,42 @@ class CopilotAgent:
             "contradiction_summary": contradiction_summary
         }
         
-        chat = self.model.start_chat(history=self._format_history(history))
-        response = await chat.send_message_async(prompt, stream=True)
-        async for chunk in response:
-            if chunk.text:
-                yield {"type": "token", "text": chunk.text}
+        if self.model is None:
+            yield {"type": "token", "text": self._grounded_fallback(search_results, graph_results)}
+            return
+
+        try:
+            chat = self.model.start_chat(history=self._format_history(history))
+            response = await chat.send_message_async(prompt, stream=True)
+            async for chunk in response:
+                if chunk.text:
+                    yield {"type": "token", "text": chunk.text}
+        except Exception as exc:
+            logger.warning("Copilot model request failed (%s); using grounded fallback.", exc)
+            yield {"type": "token", "text": self._grounded_fallback(search_results, graph_results)}
+
+    @staticmethod
+    def _grounded_fallback(search_results: List[Dict[str, Any]], graph_results: List[Dict[str, Any]]) -> str:
+        excerpts = []
+        for result in search_results[:3]:
+            text = " ".join(result.get("text", "").split())[:360]
+            if text:
+                excerpts.append(f"{text} [{result.get('doc_id')}:{result.get('page_number', 1)}]")
+        if excerpts:
+            return "I found the following evidence in your indexed documents:\n\n- " + "\n- ".join(excerpts)
+        if graph_results:
+            equipment = graph_results[0].get("equipment", {})
+            tag = equipment.get("tag", "the requested equipment")
+            connections = graph_results[0].get("connections", [])[:5]
+            details = []
+            for connection in connections:
+                properties = connection.get("properties", {})
+                identity = properties.get("id") or properties.get("code") or properties.get("tag") or properties.get("name")
+                if identity:
+                    details.append(f"{connection.get('relation', 'CONNECTED_TO')} {connection.get('label', 'record')} {identity}")
+            suffix = f" Connected records: {', '.join(details)}." if details else ""
+            return f"The knowledge graph contains {tag} with {len(graph_results[0].get('connections', []))} directly connected records.{suffix}"
+        return "I don't have enough source coverage to answer this confidently."
                 
     def _format_history(self, history: List[Dict[str, str]]) -> List[Dict[str, str]]:
         if not history:

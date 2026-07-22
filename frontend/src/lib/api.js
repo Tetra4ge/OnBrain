@@ -68,3 +68,35 @@ export async function semanticSearch(query, topK = 5, docTypeFilter = null) {
 export async function listEquipmentTags() {
   return request('/api/graph/equipment')
 }
+
+export async function streamCopilotResponse({ query, sessionId, onEvent }) {
+  const response = await fetch('/api/copilot/query', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'text/event-stream' },
+    body: JSON.stringify({ query, session_id: sessionId }),
+  })
+  if (!response.ok || !response.body) {
+    const detail = await response.text()
+    throw new Error(detail || `Copilot request failed (${response.status})`)
+  }
+
+  const reader = response.body.getReader()
+  const decoder = new TextDecoder()
+  let buffer = ''
+  while (true) {
+    const { done, value } = await reader.read()
+    buffer += decoder.decode(value || new Uint8Array(), { stream: !done })
+    const events = buffer.split('\n\n')
+    buffer = events.pop() || ''
+    for (const rawEvent of events) {
+      const dataLine = rawEvent.split('\n').find(line => line.startsWith('data: '))
+      if (!dataLine) continue
+      const payload = dataLine.slice(6)
+      if (payload === '[DONE]') continue
+      const event = JSON.parse(payload)
+      if (event.type === 'error') throw new Error(event.message || 'Copilot request failed')
+      onEvent(event)
+    }
+    if (done) break
+  }
+}

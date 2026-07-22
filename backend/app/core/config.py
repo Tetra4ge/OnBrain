@@ -27,6 +27,8 @@ class Settings(BaseSettings):
 
     GROQ_API_KEY: Optional[str] = None
     GEMINI_API_KEY: Optional[str] = None
+    USE_LLM_EXTRACTION: bool = False
+    USE_GENERATIVE_COPILOT: bool = False
 
     FIREBASE_PROJECT_ID: Optional[str] = None
     FIREBASE_SERVICE_ACCOUNT_PATH: Optional[str] = None

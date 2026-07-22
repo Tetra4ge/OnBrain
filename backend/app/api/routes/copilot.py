@@ -25,9 +25,19 @@ async def copilot_query(req: QueryRequest):
     """
     SSE Endpoint for Copilot Q&A
     """
-    col = get_history_collection()
-    history_record = col.find_one({"_id": req.session_id})
-    history = history_record["history"] if history_record else []
+    if not req.query.strip():
+        raise HTTPException(status_code=400, detail="Query cannot be empty.")
+    if not req.session_id.strip():
+        raise HTTPException(status_code=400, detail="Session ID cannot be empty.")
+
+    col = None
+    history = []
+    try:
+        col = get_history_collection()
+        history_record = col.find_one({"_id": req.session_id})
+        history = history_record.get("history", []) if history_record else []
+    except Exception as exc:
+        logger.warning("Chat history unavailable; continuing without it: %s", exc)
     
     async def event_generator():
         full_answer = ""
@@ -49,11 +59,15 @@ async def copilot_query(req: QueryRequest):
                 {"role": "model", "content": full_answer}
             ]
             new_history = new_history[-20:]
-            col.update_one(
-                {"_id": req.session_id},
-                {"$set": {"history": new_history}},
-                upsert=True
-            )
+            if col is not None:
+                try:
+                    col.update_one(
+                        {"_id": req.session_id},
+                        {"$set": {"history": new_history}},
+                        upsert=True
+                    )
+                except Exception as exc:
+                    logger.warning("Could not persist chat history: %s", exc)
             
         except Exception as e:
             logger.error(f"Error in Copilot query: {e}")
@@ -63,8 +77,11 @@ async def copilot_query(req: QueryRequest):
 
 @router.get("/history")
 def get_history(session_id: str) -> Dict[str, Any]:
-    col = get_history_collection()
-    record = col.find_one({"_id": session_id})
+    try:
+        col = get_history_collection()
+        record = col.find_one({"_id": session_id})
+    except Exception:
+        return {"session_id": session_id, "history": []}
     if not record:
         return {"session_id": session_id, "history": []}
     return {"session_id": session_id, "history": record["history"]}

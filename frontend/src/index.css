@@ -1,325 +1,37 @@
-/* ============================================================
-   OnBrain Design System — Bitcoin DeFi Aesthetic
-   Palette: True Void + Bitcoin Orange + Tuscan Sun + Carbon Black
-   Fonts: Merriweather (headings) · Slabo 27px (body) · JetBrains Mono (data)
-   ============================================================ */
-
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
-/* ── Design Tokens ─────────────────────────────────────────── */
+@font-face {
+  font-family: 'Doctor Glitch';
+  src: url('/doctor-glitch.ttf') format('truetype');
+  font-display: swap;
+}
+
 :root {
-  /* Backgrounds */
-  --bg-void:          #030304;   /* True Void */
-  --surface:          #242423;   /* Carbon Black */
-  --surface-mid:      #1a1a19;
-
-  /* Text */
-  --fg:               #FFFFFF;
-  --muted:            #94A3B8;
-
-  /* Borders */
-  --border:           #1E293B;
-
-  /* Accents */
-  --orange-primary:   #F7931A;   /* Bitcoin Orange */
-  --orange-secondary: #EA580C;   /* Burnt Orange */
-  --gold:             #F5CB5C;   /* Tuscan Sun */
-
-  /* Typography */
-  --font-heading: 'Merriweather', Georgia, serif;
-  --font-body:    'Slabo 27px', Georgia, serif;
-  --font-mono:    'JetBrains Mono', 'Courier New', monospace;
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
 }
 
-/* ── Tailwind v4 Theme Extension ───────────────────────────── */
 @theme {
-  --color-void:    #030304;
-  --color-surface: #242423;
-  --color-orange:  #F7931A;
-  --color-burnt:   #EA580C;
-  --color-gold:    #F5CB5C;
-  --color-muted:   #94A3B8;
-  --color-border:  #1E293B;
+  --font-sans: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
 }
 
-/* ── Base Reset ────────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; }
+html { min-width: 320px; background: #17150a; scrollbar-color: rgba(255, 190, 11, 0.4) #1f1b0c; scrollbar-width: thin; }
 
-html { scroll-behavior: smooth; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #1f1b0c; }
+::-webkit-scrollbar-thumb { background: rgba(255, 190, 11, 0.4); border-radius: 10px; border: 2px solid #1f1b0c; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 190, 11, 0.8); }
+body { min-width: 320px; margin: 0; background: #17150a; color: #fff9e8; font-family: var(--font-body); -webkit-font-smoothing: antialiased; }
+button, input, textarea, select { font: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+input:focus, input:focus-visible, textarea:focus, textarea:focus-visible, select:focus, select:focus-visible { outline: none !important; box-shadow: none !important; }
+:focus-visible:not(input):not(textarea):not(select) { outline: 2px solid #ffbe0b; outline-offset: 2px; }
+::selection { background: rgba(255,190,11,.28); }
 
-body {
-  font-family: var(--font-body);
-  background-color: var(--bg-void);
-  color: var(--fg);
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  line-height: 1.7;
-}
-
-/* ── Layout Container Utilities (bypasses Tailwind JIT issues) ─ */
-/* Use these on wrapping divs to guarantee max-width + centering */
-.wrap {
-  width: 100%;
-  max-width: 80rem;   /* 1280px — equivalent to max-w-7xl */
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-}
-
-.wrap-narrow {
-  width: 100%;
-  max-width: 48rem;   /* 768px — equivalent to max-w-3xl */
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-}
-
-.wrap-mid {
-  width: 100%;
-  max-width: 64rem;   /* 1024px — equivalent to max-w-5xl */
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-}
-
-/* ── Typography Utility Classes ────────────────────────────── */
-.font-heading { font-family: var(--font-heading); }
-.font-body    { font-family: var(--font-body); }
-.font-mono    { font-family: var(--font-mono); }
-
-/* ── Gradient Text ─────────────────────────────────────────── */
-.gradient-text {
-  background: linear-gradient(to right, #F7931A, #F5CB5C);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.gradient-text-deep {
-  background: linear-gradient(to right, #EA580C, #F7931A);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ── Background Grid Pattern ───────────────────────────────── */
-.bg-grid-pattern {
-  background-size: 50px 50px;
-  background-image:
-    linear-gradient(to right,  rgba(30, 41, 59, 0.5) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(30, 41, 59, 0.5) 1px, transparent 1px);
-  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
-          mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
-}
-
-/* ── Glass / Morphism ──────────────────────────────────────── */
-.glass-card {
-  background: rgba(36, 36, 35, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.glass-dark {
-  background: rgba(3, 3, 4, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-/* ── Glow Utilities ────────────────────────────────────────── */
-.glow-orange    { box-shadow: 0 0 20px -5px rgba(247, 147, 26, 0.5); }
-.glow-orange-lg { box-shadow: 0 0 40px -5px rgba(247, 147, 26, 0.4), 0 0 80px -20px rgba(234, 88, 12, 0.3); }
-.glow-gold      { box-shadow: 0 0 20px rgba(245, 203, 92, 0.3); }
-.glow-subtle    { box-shadow: 0 0 50px -10px rgba(247, 147, 26, 0.1); }
-
-/* ── Section Label ─────────────────────────────────────────── */
-.section-label {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #F7931A;
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-/* ── Animations ────────────────────────────────────────────── */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-18px); }
-}
-
-@keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-@keyframes spin-reverse {
-  from { transform: rotate(360deg); }
-  to   { transform: rotate(0deg); }
-}
-
-@keyframes ticker {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes pulse-ring {
-  0%   { transform: scale(0.95); opacity: 1; }
-  100% { transform: scale(1.4);  opacity: 0; }
-}
-
-.animate-float        { animation: float 8s ease-in-out infinite; }
-.animate-spin-slow    { animation: spin-slow 12s linear infinite; }
-.animate-spin-reverse { animation: spin-reverse 18s linear infinite; }
-.animate-ticker       { animation: ticker 30s linear infinite; }
-.animate-fade-up      { animation: fade-up 0.6s ease-out forwards; }
-.animate-pulse-ring   { animation: pulse-ring 2s ease-out infinite; }
-
-/* ── Reduce Motion ─────────────────────────────────────────── */
-@media (prefers-reduced-motion: reduce) {
-  .animate-float, .animate-spin-slow, .animate-spin-reverse,
-  .animate-ticker, .animate-fade-up, .animate-pulse-ring,
-  .animate-bounce, .animate-ping {
-    animation: none !important;
-    transition: none !important;
-  }
-}
-
-/* ── Scrollbar ─────────────────────────────────────────────── */
-::-webkit-scrollbar       { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: rgba(36, 36, 35, 0.5); border-radius: 8px; }
-::-webkit-scrollbar-thumb { background: rgba(247, 147, 26, 0.3); border-radius: 8px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(247, 147, 26, 0.6); }
-
-/* ── Focus & Selection ─────────────────────────────────────── */
-:focus-visible {
-  outline: 2px solid var(--orange-primary);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-::selection {
-  background: rgba(247, 147, 26, 0.3);
-  color: #fff;
-}
-
-/* ── Corner Accent (How It Works cards) ────────────────────── */
-.corner-accent { position: relative; }
-.corner-accent::before,
-.corner-accent::after {
-  content: '';
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  border-color: rgba(247, 147, 26, 0.5);
-  border-style: solid;
-}
-.corner-accent::before {
-  top: 0; left: 0;
-  border-width: 1px 0 0 1px;
-  border-radius: 4px 0 0 0;
-}
-.corner-accent::after {
-  bottom: 0; right: 0;
-  border-width: 0 1px 1px 0;
-  border-radius: 0 0 4px 0;
-}
-
-/* ── Phase 8: Drop Zone ────────────────────────────────────── */
-.drop-zone {
-  border: 2px dashed rgba(247, 147, 26, 0.3);
-  border-radius: 1.25rem;
-  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-}
-.drop-zone:hover,
-.drop-zone.drag-over {
-  border-color: rgba(247, 147, 26, 0.7);
-  box-shadow: 0 0 30px -5px rgba(247, 147, 26, 0.35);
-  background: rgba(247, 147, 26, 0.04);
-}
-
-/* ── Phase 8: Status Badges ────────────────────────────────── */
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 0.2rem 0.6rem;
-  border-radius: 999px;
-  border: 1px solid;
-  font-weight: 600;
-}
-.status-synced  { color: #34d399; border-color: rgba(52,211,153,0.3);  background: rgba(52,211,153,0.1); }
-.status-pending { color: #F5CB5C; border-color: rgba(245,203,92,0.3);  background: rgba(245,203,92,0.1); }
-.status-error   { color: #EA580C; border-color: rgba(234,88,12,0.3);   background: rgba(234,88,12,0.1); }
-.status-partial { color: #94A3B8; border-color: rgba(148,163,184,0.3); background: rgba(148,163,184,0.08); }
-
-/* ── Phase 8: Doc-Type Pills ───────────────────────────────── */
-.doc-pill {
-  display: inline-flex;
-  align-items: center;
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 0.15rem 0.55rem;
-  border-radius: 999px;
-  border: 1px solid;
-  font-weight: 700;
-}
-.doc-pill-manual       { color: #60a5fa; border-color: rgba(96,165,250,0.3);  background: rgba(96,165,250,0.08); }
-.doc-pill-work_order   { color: #F7931A; border-color: rgba(247,147,26,0.3);  background: rgba(247,147,26,0.08); }
-.doc-pill-inspection   { color: #a78bfa; border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.08); }
-.doc-pill-regulation   { color: #34d399; border-color: rgba(52,211,153,0.3);  background: rgba(52,211,153,0.08); }
-.doc-pill-pid          { color: #F5CB5C; border-color: rgba(245,203,92,0.3);  background: rgba(245,203,92,0.08); }
-.doc-pill-root         { color: #94A3B8; border-color: rgba(148,163,184,0.2); background: rgba(148,163,184,0.06); }
-
-/* ── Phase 8: Progress Stripe ──────────────────────────────── */
-@keyframes progress-stripe {
-  0%   { background-position: 0 0; }
-  100% { background-position: 40px 0; }
-}
-.progress-stripe {
-  background-image: repeating-linear-gradient(
-    45deg,
-    rgba(255,255,255,0.08) 0,
-    rgba(255,255,255,0.08) 10px,
-    transparent 10px,
-    transparent 20px
-  );
-  background-size: 40px 40px;
-  animation: progress-stripe 1s linear infinite;
-}
-
-/* ── Phase 8: Compliance Gap/Covered ──────────────────────── */
-.gap-card-covered { border-left: 3px solid #34d399; }
-.gap-card-warning { border-left: 3px solid #F5CB5C; }
-.gap-card-missing { border-left: 3px solid #EA580C; }
-
-/* ── Phase 8: Mobile Responsive ───────────────────────────── */
-@media (max-width: 768px) {
-  /* Hide desktop sidebar on small screens */
-  .app-sidebar { display: none !important; }
-
-  /* Stack page layout vertically */
-  .app-shell { flex-direction: column !important; }
-
-  /* Add bottom padding for mobile nav bar */
-  .app-main { padding-bottom: 4.5rem !important; }
-}
-
+.wrap { width: 100%; max-width: 80rem; margin-inline: auto; padding-inline: 1.5rem; }
+@media (max-width: 640px) { .wrap { padding-inline: 1rem; } }
