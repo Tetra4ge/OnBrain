@@ -36,27 +36,27 @@ export default function ComplianceWorkspace() {
     <WorkspaceShell title="Compliance scan" eyebrow="Regulatory evidence coverage">
       <div className="w-full space-y-6">
         <Panel className="p-6 rounded-md border border-[#fff9e8]/10 bg-[#272311]/70">
-          <form onSubmit={submit} className="flex flex-col gap-4 sm:flex-row items-end">
-            <div className="flex-1 min-w-0">
-              <label htmlFor="compliance-query" className="block mb-2 text-xs font-semibold text-[#c7bea1]">
-                Target Process, Equipment, or Regulatory Standard
-              </label>
-              <textarea 
+          <form onSubmit={submit} className="space-y-2">
+            <label htmlFor="compliance-query" className="block text-xs font-semibold text-[#c7bea1]">
+              Target Process, Equipment, or Regulatory Standard
+            </label>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <input 
+                type="text"
                 id="compliance-query" 
                 value={query} 
                 onChange={event => setQuery(event.target.value)} 
-                rows={2} 
                 placeholder="Describe the procedure, requirement, or risk scenario you need to validate against indexed regulations…" 
-                className="w-full resize-none rounded border border-[#fff9e8]/15 bg-[#17150a] px-3.5 py-2.5 text-xs text-[#fff9e8] outline-none placeholder:text-[#8e876e] focus:border-[#ffbe0b]" 
+                className="h-10 flex-1 rounded border border-[#fff9e8]/15 bg-[#17150a] px-3.5 text-xs text-[#fff9e8] outline-none placeholder:text-[#8e876e] focus:border-[#ffbe0b]" 
               />
+              <button 
+                disabled={loading || !query.trim()} 
+                className="inline-flex h-10 items-center justify-center gap-2 rounded bg-[#ffbe0b] px-5 text-xs font-bold text-[#181609] transition hover:bg-[#ffda62] disabled:opacity-40"
+              >
+                <Search size={15} />
+                {loading ? 'Scanning…' : 'Run Compliance Scan'}
+              </button>
             </div>
-            <button 
-              disabled={loading || !query.trim()} 
-              className="inline-flex h-11 items-center justify-center gap-2 rounded bg-[#ffbe0b] px-6 text-xs font-bold text-[#181609] transition hover:bg-[#ffda62] disabled:opacity-40"
-            >
-              <Search size={16} />
-              {loading ? 'Scanning Corpus…' : 'Run Compliance Scan'}
-            </button>
           </form>
 
           <div className="mt-4 pt-3 border-t border-[#fff9e8]/8 flex flex-wrap items-center gap-2">

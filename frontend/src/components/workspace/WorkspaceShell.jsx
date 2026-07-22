@@ -29,7 +29,7 @@ export default function WorkspaceShell({ title, eyebrow, children, actions }) {
   return (
     <div className="flex min-h-screen flex-col bg-[#17150a] font-sans text-[#fff9e8]" style={{ '--font-heading': "'Doctor Glitch', sans-serif", '--amber': '#ffbe0b', '--malt': '#272311', '--malt-2': '#181609', '--ink': '#161508', '--cream': '#fff9e8', '--muted-cream': '#c7bea1' }}>
       <div className="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_90%_-10%,rgba(255,190,11,0.12),transparent_26rem)]" />
-      <header className="sticky top-0 z-30 border-b border-[#fff9e8]/10 bg-[#1b190c]/90 backdrop-blur-xl">
+      <header className="sticky top-0 z-30 bg-[#17150a]/90 backdrop-blur-xl">
         <nav className="ob-nav mx-auto flex w-full max-w-[1400px] items-center justify-between px-4 sm:px-6 lg:px-8" aria-label="Workspace navigation">
           <Link className="ob-logo" to="/" aria-label="Return to OnBrain home">
             <span>ONBRAIN</span>
