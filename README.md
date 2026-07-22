@@ -10,11 +10,9 @@
 [![Python](https://img.shields.io/badge/PYTHON-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FASTAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![Firebase](https://img.shields.io/badge/FIREBASE-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
-[![Docker](https://img.shields.io/badge/DOCKER-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 [![Google Gemini](https://img.shields.io/badge/GOOGLE_GEMINI-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white)](https://ai.google.dev/)
-[![Neo4j](https://img.shields.io/badge/NEO4J-008CC1?style=for-the-badge&logo=neo4j&logoColor=white)](https://neo4j.com/)
+[![Neo4j Aura](https://img.shields.io/badge/NEO4J_AURA-008CC1?style=for-the-badge&logo=neo4j&logoColor=white)](https://neo4j.com/cloud/aura/)
 [![ChromaDB](https://img.shields.io/badge/CHROMADB-FF6F61?style=for-the-badge&logo=database&logoColor=white)](https://www.trychroma.com/)
-[![MongoDB](https://img.shields.io/badge/MONGODB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
 
 </div>
 
@@ -32,7 +30,7 @@ In complex industrial facilities, engineers and maintenance technicians spend **
 
 | ❌ The Industrial Problem | ✅ The OnBrain Solution |
 | :--- | :--- |
-| **Fragmented Siloes**: Critical history is trapped across 7–12 separate databases and PDF archives. | **Unified Operating Memory**: Ingests PDFs, CSVs, JSONs, and TXT files into a single graph + vector index. |
+| **Fragmented Siloes**: Critical history is trapped across separate databases and PDF archives. | **Unified Operating Memory**: Ingests PDFs, CSVs, JSONs, and TXT files into a single graph + vector index. |
 | **LLM Hallucinations**: Standard RAG often invents non-existent equipment specs or maintenance steps. | **Graph-Backed Grounding**: Every AI response requires explicit document citations and confidence scoring. |
 | **Lost Expertise**: Decades of tribal knowledge vanish when senior engineers retire. | **Self-Learning Knowledge Graph**: Automatically links equipment tags (e.g., `P-204`) with historical failure events. |
 | **Downtime Losses**: Slow root-cause analysis causes millions in unplanned operational outages. | **Instant Root Cause Analysis**: Automated RCA agent synthesizes failure history, OEM manuals, and inspection logs. |
@@ -49,7 +47,7 @@ In complex industrial facilities, engineers and maintenance technicians spend **
 ### 2. Automated Document Ingestion Pipeline
 - **Multi-Taxonomy Intake**: Auto-detects and indexes manuals, work orders, inspection reports, P&ID drawings, and regulatory standards.
 - **Entity Extraction**: Automatically extracts equipment tags, operational parameters, dates, and personnel.
-- **Dual Vector & Graph Indexing**: Generates 384-dimensional embeddings stored in ChromaDB while simultaneously linking nodes and relationships in Neo4j.
+- **Triple Database Sync**: Stores metadata in Firestore, vector embeddings in ChromaDB, and entity lineages in Neo4j Aura.
 
 ### 3. Knowledge Explorer
 - **High-Density Corpus Table**: Full visibility into indexed files, chunk counts, extracted entities, and synchronization status.
@@ -61,49 +59,49 @@ In complex industrial facilities, engineers and maintenance technicians spend **
 
 ---
 
-## 🏗 System Architecture
+## 🏗 System Architecture (Production-Ready)
 
+```mermaid
+graph TD
+    %% Styling
+    classDef frontend fill:#2d3748,stroke:#4fd1c5,stroke-width:2px,color:#fff
+    classDef backend fill:#2c5282,stroke:#63b3ed,stroke-width:2px,color:#fff
+    classDef cloud fill:#744210,stroke:#f6e05e,stroke-width:2px,color:#fff
+    classDef ai fill:#553c9a,stroke:#b794f4,stroke-width:2px,color:#fff
+
+    %% Nodes
+    UI[<b>Frontline Technician / UI</b><br/>React 18 + Vite + Tailwind]:::frontend
+    API[<b>FastAPI Backend</b><br/>Python 3.11 + Pydantic]:::backend
+    
+    subgraph Databases [Triple-Database Architecture]
+        NEO[<b>Knowledge Graph</b><br/>Neo4j Aura Cloud<br/><i>Equipment Lineage & Events</i>]:::cloud
+        FS[<b>Metadata Store</b><br/>Firestore Cloud<br/><i>Auth & Document State</i>]:::cloud
+        VDB[<b>Vector Store</b><br/>ChromaDB Local<br/><i>Semantic Chunks & Retrieval</i>]:::cloud
+    end
+
+    LLM[<b>Reasoning & Agent Engine</b><br/>Google Gemini / Groq APIs<br/><i>RCA & Source Citation</i>]:::ai
+
+    %% Relationships
+    UI -- "REST / Streaming API" --> API
+    API -- "Graph Traversal" --> NEO
+    API -- "Doc State & Auth" --> FS
+    API -- "Vector Search" --> VDB
+    API -- "RAG Prompts" --> LLM
+    
+    LLM -. "Reasoning context" .-> Databases
 ```
-                                  +------------------------------------+
-                                  |     Frontline Technician / UI      |
-                                  |    (React 18 + Vite + Tailwind)    |
-                                  +-----------------+------------------+
-                                                    | REST / Streaming API
-                                                    v
-                                  +------------------------------------+
-                                  |          FastAPI Backend           |
-                                  |      (Python 3.11 + Pydantic)      |
-                                  +--------+------------------+--------+
-                                           |                  |
-                    +----------------------+                  +----------------------+
-                    |                                                                |
-                    v                                                                v
-   +---------------------------------+                              +---------------------------------+
-   |      Knowledge Graph (Neo4j)    |                              |    Vector Store (ChromaDB)      |
-   | - Equipment Nodes (e.g., P-204)  |                              | - 384d MiniLM Chunks            |
-   | - Failure Event Relationships   |                              | - Semantic Document Passages    |
-   | - Work Order Lineage            |                              | - Metadata Filtering            |
-   +----------------+----------------+                              +----------------+----------------+
-                    |                                                                |
-                    +----------------------+                  +----------------------+
-                                           |                  |
-                                           v                  v
-                                  +------------------------------------+
-                                  |      Reasoning & Agent Engine      |
-                                  |        (Google Gemini API)         |
-                                  | - Source Citation Verification     |
-                                  | - Root Cause Analysis (RCA)        |
-                                  | - Confidence Scoring Engine        |
-                                  +------------------------------------+
----
+
 ---
 
-## ⚡️ Getting Started
+## ⚡️ Getting Started (Local Development)
+
+The architecture is fully migrated to managed cloud services for a lightweight local setup. Docker is **no longer required** for running the database services.
 
 ### Prerequisites
 - **Node.js** v18+ and **npm** v9+
 - **Python** 3.11+
-- **Docker & Docker Compose** (for database services)
+- **Firebase Project** (with Firestore and Authentication enabled)
+- **Neo4j Aura** (Free Tier graph database instance)
 
 ### 1. Clone & Configure Environment
 ```bash
@@ -111,23 +109,38 @@ git clone https://github.com/Tetra4ge/OnBrain.git
 cd OnBrain
 ```
 
-Create a `.env` file in the `backend/` directory:
+Create a `.env` file in the `backend/` directory with your cloud credentials:
 ```env
-GEMINI_API_KEY=your_google_gemini_api_key
-NEO4J_URI=bolt://localhost:7687
+ENVIRONMENT=development
+PORT=8000
+
+# Cloud Graph DB
+NEO4J_URI=neo4j+s://<your-aura-id>.databases.neo4j.io
 NEO4J_USER=neo4j
-NEO4J_PASSWORD=strongpassword
-CHROMA_HOST=localhost
-CHROMA_PORT=8001
-MONGO_URI=mongodb://root:rootpassword@localhost:27017
+NEO4J_PASSWORD=your_secure_password
+
+# Local Vector DB
+CHROMA_DATABASE=Onbrain
+
+# LLMs
+GROQ_API_KEY=your_groq_api_key
+GEMINI_API_KEY=your_gemini_api_key
+
+# Cloud Metadata
+FIREBASE_PROJECT_ID=your_firebase_project_id
+FIREBASE_SERVICE_ACCOUNT_PATH=./service-account.json
 ```
 
-### 2. Start Databases via Docker
-```bash
-docker-compose up -d
+Create a `.env` file in the `frontend/` directory:
+```env
+VITE_MODE=development
+VITE_API_DEV_URL=http://localhost:8000
+VITE_FIREBASE_API_KEY=your_firebase_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your_project
 ```
 
-### 3. Launch Backend API Server
+### 2. Launch Backend API Server
 ```bash
 cd backend
 python -m venv venv
@@ -141,7 +154,7 @@ uvicorn app.main:app --reload --port 8000
 ```
 *API interactive docs available at: `http://localhost:8000/docs`*
 
-### 4. Launch Frontend Web Dashboard
+### 3. Launch Frontend Web Dashboard
 ```bash
 cd ../frontend
 npm install

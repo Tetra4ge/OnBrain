@@ -47,7 +47,7 @@ def _create_constraints():
         "CREATE CONSTRAINT regulation_code IF NOT EXISTS FOR (r:Regulation) REQUIRE r.code IS UNIQUE",
         "CREATE CONSTRAINT document_id   IF NOT EXISTS FOR (d:Document)   REQUIRE d.id  IS UNIQUE",
     ]
-    with driver.session(database="neo4j") as session:
+    with driver.session() as session:
         for cypher in constraints:
             try:
                 session.run(cypher)
@@ -160,7 +160,7 @@ def upsert_entity(entity_type: str, data: Dict[str, Any]) -> Optional[str]:
         return None
     try:
         driver = _get_driver()
-        with driver.session(database="neo4j") as session:
+        with driver.session() as session:
             result = session.run(query, **data)
             record = result.single()
             return record["node_id"] if record else None
@@ -263,7 +263,7 @@ def write_relationships(relationships: List[Dict[str, Any]]) -> int:
     """
     success_count = 0
     driver = _get_driver()
-    with driver.session(database="neo4j") as session:
+    with driver.session() as session:
         for rel in relationships:
             rel_type = rel.get("relation", "")
             query = _REL_QUERIES.get(rel_type)
@@ -303,7 +303,7 @@ def get_equipment_graph(tag: str, depth: int = 2) -> Optional[Dict[str, Any]]:
                collect(DISTINCT {rel: type(r2), node: n2, label: labels(n2)}) AS second_hop
     """
     try:
-        with driver.session(database="neo4j") as session:
+        with driver.session() as session:
             result = session.run(query, tag=tag)
             record = result.single()
             if not record:
@@ -337,7 +337,7 @@ def get_all_equipment_tags() -> List[str]:
     """Returns all Equipment tags currently in the graph — used to populate RCA form dropdown."""
     try:
         driver = _get_driver()
-        with driver.session(database="neo4j") as session:
+        with driver.session() as session:
             result = session.run("MATCH (e:Equipment) RETURN e.tag AS tag ORDER BY tag")
             return [record["tag"] for record in result]
     except Exception as e:
@@ -352,7 +352,7 @@ def get_failure_history(tag: str) -> List[Dict[str, Any]]:
     """
     try:
         driver = _get_driver()
-        with driver.session(database="neo4j") as session:
+        with driver.session() as session:
             result = session.run(
                 """
                 MATCH (e:Equipment {tag: $tag})-[:EXPERIENCED]->(f:Failure)
