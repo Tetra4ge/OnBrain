@@ -18,6 +18,9 @@
 
 ---
 
+> **Built for the ET Gen AI 2.0 Hackathon**  
+> *Problem Statement 8. AI for Industrial Knowledge Intelligence: Unified Asset & Operations Brain*
+
 ## Problem Statement
 
 In complex industrial facilities, engineers and maintenance technicians spend **up to 35% of their working hours** manually searching across fragmented siloes — P&IDs, equipment manuals, incident logs, work orders, and ISO regulatory standards.
@@ -56,6 +59,17 @@ In complex industrial facilities, engineers and maintenance technicians spend **
 ### 4. Regulatory Evidence & Compliance Scan
 - **Semantic Coverage Analysis**: Search risk scenarios or procedure requirements against indexed regulatory manuals.
 - **Quick-Scan Prompts**: One-click assessment chips for pressure vessel inspection intervals, pump vibration limits, LOTO safety, and ISO 9001 compliance.
+
+---
+
+## Application Previews
+
+<p align="center">
+  <img src="images/1.png" width="100%" style="border-radius: 5px; margin-bottom: 20px;" />
+  <img src="images/2.png" width="100%" style="border-radius: 5px; margin-bottom: 20px;" />
+  <img src="images/3.png" width="100%" style="border-radius: 5px; margin-bottom: 20px;" />
+  <img src="images/4.png" width="100%" style="border-radius: 5px; margin-bottom: 20px;" />
+</p>
 
 ---
 
